@@ -49,7 +49,7 @@ def typescript_note(status: dict) -> str:
         return f"TypeScript and JavaScript functions were measured with the TypeScript compiler {status['version']}."
     return (
         f"TypeScript and JavaScript functions were measured approximately ({status['reason']}). "
-        "For exact measures, install Node.js, and install `typescript` in the repository or set CQ_TYPESCRIPT to its path."
+        "For exact measures, install Node.js and typescript 5 or 6, in the repository or with CQ_TYPESCRIPT set to its path."
     )
 
 

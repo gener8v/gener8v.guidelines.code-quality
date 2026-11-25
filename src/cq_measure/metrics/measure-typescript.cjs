@@ -19,15 +19,32 @@ const WRAPPERS = new Set([
 ]);
 
 // Load the compiler from `override`, or from the node_modules of the
-// repository root or of the directories that hold the files.
+// repository root or of the directories that hold the files. TypeScript 7
+// and later have no CommonJS compiler API, so they cannot be used.
 function loadTypescript(root, files, override) {
-  if (override) return require(override);
+  const ts = require(override ? packageEntry(override) : findTypescript(root, files));
+  if (typeof ts.createSourceFile !== "function") {
+    throw new Error(`typescript ${ts.version || "(unknown version)"} has no compiler API that cq-measure can use`);
+  }
+  return ts;
+}
+
+function findTypescript(root, files) {
   const directories = [root, ...new Set(files.map((file) => path.dirname(path.join(root, file))))];
   for (const directory of directories.slice(0, 50)) {
     const location = resolveFrom(directory);
-    if (location) return require(location);
+    if (location) return location;
   }
   throw new Error("the typescript package is not installed in the repository");
+}
+
+// Return the file to load for a package directory: its `main`, or its `exports["."]`.
+function packageEntry(location) {
+  const manifestPath = path.join(location, "package.json");
+  if (!fs.existsSync(manifestPath)) return location;
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  const exported = manifest.exports && typeof manifest.exports["."] === "string" ? manifest.exports["."] : null;
+  return path.join(location, manifest.main || exported || "index.js");
 }
 
 function resolveFrom(directory) {

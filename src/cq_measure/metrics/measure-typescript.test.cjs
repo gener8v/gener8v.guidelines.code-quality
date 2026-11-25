@@ -4,6 +4,8 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 const { FileMeasurer, loadTypescript } = require("./measure-typescript.cjs");
 
@@ -103,6 +105,18 @@ test("describes classes and interfaces", { skip }, () => {
     methods: ["constructor", "get", "handle", "save"],
   });
   assert.deepEqual(reader, { name: "Reader", line: 8, kind: "interface", bases: ["Base"], implements: [], methods: ["read"] });
+});
+
+test("refuses a typescript package without the compiler API, such as TypeScript 7", () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "cq-ts7-"));
+  fs.mkdirSync(path.join(directory, "lib"));
+  fs.writeFileSync(path.join(directory, "package.json"), JSON.stringify({ exports: { ".": "./lib/version.cjs" } }));
+  fs.writeFileSync(path.join(directory, "lib", "version.cjs"), "module.exports = { version: '7.0.2' };");
+  try {
+    assert.throws(() => loadTypescript(directory, [], directory), /typescript 7\.0\.2 has no compiler API/);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test("reports a clear error when typescript cannot be found", () => {

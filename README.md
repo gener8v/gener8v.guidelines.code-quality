@@ -47,6 +47,8 @@ Useful options:
 
 `cq-measure` measures TypeScript and JavaScript functions and classes with the TypeScript compiler. It uses the `typescript` package that the measured repository has installed, and it needs Node.js. The complexity is the same value that the ESLint `complexity` rule gives.
 
+The package must be TypeScript 5 or 6. TypeScript 7 has no compiler API that `cq-measure` can use. For a repository on TypeScript 7, install `typescript@6` in a different directory and set `CQ_TYPESCRIPT` to its path.
+
 If Node.js or the `typescript` package is not available, `cq-measure` approximates these measures, and the last line of its report says so. To use a different `typescript` package, set `CQ_TYPESCRIPT` to its path. To use the approximation, set `CQ_TYPESCRIPT=off`.
 
 ## Use with Claude Code

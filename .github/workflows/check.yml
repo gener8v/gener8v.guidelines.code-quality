@@ -22,12 +22,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Install the TypeScript compiler outside the repository
+      - name: Install TypeScript 6 (the last version with the compiler API) outside the repository
         working-directory: ${{ runner.temp }}
         run: |
           mkdir cq-typescript && cd cq-typescript
           npm init --yes > /dev/null
-          npm install --no-audit --no-fund typescript
+          npm install --no-audit --no-fund typescript@6
           test -f node_modules/typescript/package.json
           echo "CQ_TYPESCRIPT=$PWD/node_modules/typescript" >> "$GITHUB_ENV"
       - name: Guidelines, defaults and generated files agree

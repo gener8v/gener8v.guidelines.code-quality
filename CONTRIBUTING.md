@@ -15,10 +15,10 @@ node --test src/cq_measure/metrics/measure-typescript.test.cjs
 PYTHONPATH=src python3 -m cq_measure .
 ```
 
-The TypeScript measures need a `typescript` package. Install it outside the repository, and set `CQ_TYPESCRIPT` to its path for the last three commands:
+The TypeScript measures need a `typescript` package of version 5 or 6. Install it outside the repository, and set `CQ_TYPESCRIPT` to its path for the last three commands:
 
 ```
-npm install --prefix /tmp/cq-typescript typescript
+npm install --prefix /tmp/cq-typescript typescript@6
 export CQ_TYPESCRIPT=/tmp/cq-typescript/node_modules/typescript
 ```
 
