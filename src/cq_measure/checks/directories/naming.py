@@ -9,6 +9,12 @@ from cq_measure.source.language import language_of
 from cq_measure.source.packages import parts_of
 from cq_measure.source.roles import ROUTE_DIRS, is_test_file
 
+# Junk-drawer names. None of them names a feature or a category. A repository
+# can add names with `vague_names` in .code-quality.json, but it cannot remove these.
+VAGUE_NAMES = frozenset(
+    "utils util helpers helper misc common stuff general other temp tmp new old".split()
+)
+# A route directory name is part of a URL, not a grouping of code: `app/projects/new/`.
 ROUTE_WORDS = frozenset({"new", "old", "other", "general", "edit"})
 DIGIT_WORDS = frozenset(
     "oauth http https base python auth ipv4 ecma html react angular next bcrypt argon scrypt keccak blake "
@@ -42,7 +48,7 @@ def _in_route_tree(path: str) -> bool:
 
 
 def check_vague_name(workspace, emit) -> None:
-    vague = set(workspace.config["vague_names"])
+    vague = VAGUE_NAMES | {name.lower() for name in workspace.config["vague_names"]}
     for path in sorted(workspace.directories):
         if path and not has_hidden_part(path):
             _flag_vague(emit, (path, path + "/x"), "Directory", vague)

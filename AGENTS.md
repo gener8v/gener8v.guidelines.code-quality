@@ -35,7 +35,7 @@ The text after each rule shows how it is measured. A check ID with `warn` and `f
 - **2.1** Keep the repository root clean. *`root-files` warn > 15, fail > 25; `root-source` fail*
 - **2.2** Keep each directory small. *`dir-files` warn > 12, fail > 20; `dir-subdirs` warn > 12, fail > 20*
 - **2.3** Keep the directory tree shallow. *`dir-depth` warn > 5, fail > 7*
-- **2.4** Name each directory and file for a feature or a category. *`vague-name` fail*
+- **2.4** Never give a directory or a file a junk-drawer name. *`vague-name` fail*
 - **2.5** Group code by feature, then by role. *`package-by-layer` warn*
 - **2.6** Do not nest a directory only to hold one directory. *`single-child-dir` warn*
 - **2.7** Give scripts and generated code their own directory. *`generated-placement` warn; `script-placement` warn*

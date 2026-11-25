@@ -20,7 +20,7 @@ Obey these rules each time that you write or change code. Part A (structure) con
 
 Use these questions in this sequence when you add a file:
 
-1. Which feature does the code belong to? Put it in the directory of that feature (rule 2.5). If no feature directory fits, make one with a feature name. Never use `utils`, `helpers`, `common`, or `misc` (rule 2.4).
+1. Which feature does the code belong to? Put it in the directory of that feature (rule 2.5). If no feature directory fits, make one with a feature name. Never use a junk-drawer name such as `utils`, `helpers`, `common`, or `misc`. These names are not categories (rule 2.4).
 2. Does a file for this concept exist? Add to it while it stays under the size limit (rule 1.1) and holds one concept (rule 1.2).
 3. If you make a new file, name it for its concept in the case convention of the language (rules 1.3 and 1.5). Add the role suffix that the repository uses for its role (rule 1.4).
 4. Put its unit test next to it, named for it (rules 6.1 and 6.2).
@@ -44,7 +44,7 @@ Use these questions in this sequence when you add a file:
 - **2.1** Keep the repository root clean. *`root-files` warn > 15, fail > 25; `root-source` fail*
 - **2.2** Keep each directory small. *`dir-files` warn > 12, fail > 20; `dir-subdirs` warn > 12, fail > 20*
 - **2.3** Keep the directory tree shallow. *`dir-depth` warn > 5, fail > 7*
-- **2.4** Name each directory and file for a feature or a category. *`vague-name` fail*
+- **2.4** Never give a directory or a file a junk-drawer name. *`vague-name` fail*
 - **2.5** Group code by feature, then by role. *`package-by-layer` warn*
 - **2.6** Do not nest a directory only to hold one directory. *`single-child-dir` warn*
 - **2.7** Give scripts and generated code their own directory. *`generated-placement` warn; `script-placement` warn*

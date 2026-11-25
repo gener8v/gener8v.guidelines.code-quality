@@ -77,10 +77,7 @@
     "csharp": "pascal",
     "swift": "pascal"
   },
-  "vague_names": [
-    "utils", "util", "helpers", "helper", "misc", "common", "stuff", "general",
-    "other", "temp", "tmp", "new", "old"
-  ],
+  "vague_names": [],
   "role_words": {
     "repository": ["repo"],
     "service": ["svc"],

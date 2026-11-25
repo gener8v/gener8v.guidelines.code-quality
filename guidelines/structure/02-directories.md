@@ -22,11 +22,23 @@ The root holds only what tools expect to find there: manifests, lockfiles, tool 
 
 The check counts directory levels below the nearest package root (the nearest directory with a manifest, or the repository root). A deep tree hides files and makes import paths long. Two levels of grouping (feature, then role) are almost always enough.
 
-### 2.4 Name each directory and file for a feature or a category
+### 2.4 Never give a directory or a file a junk-drawer name
 
 **Measure:** `vague-name` — fail.
 
-A name such as `utils`, `helpers`, `common`, or `misc` is a junk drawer. It tells the reader nothing, and it collects code that has no other home. The default list is: `utils`, `util`, `helpers`, `helper`, `misc`, `common`, `stuff`, `general`, `other`, `temp`, `tmp`, `new`, `old`. A name that ends in `-old`, `-new`, `-copy`, or a digit (`parser2`) is also a finding.
+A name such as `utils`, `helpers`, `common`, or `misc` is a junk drawer. It is not a category. It tells the reader nothing about the code, and it collects code that has no other home.
+
+Each of these names is a finding. None of them is a correct name for a directory or a file:
+
+`utils`, `util`, `helpers`, `helper`, `misc`, `common`, `stuff`, `general`, `other`, `temp`, `tmp`, `new`, `old`
+
+A name that ends in `-old`, `-new`, `-copy`, or a number (`parser2`) is also a finding.
+
+Name a directory for the feature that it holds (`billing`, `search`), or for a real category of code (`parsers`, `migrations`, `http`). A real category tells the reader what each file in it is.
+
+A `.code-quality.json` file can add names to the list with `vague_names`. It cannot remove a name from the list.
+
+Exception: in the route directory of a web framework (`app/`, `pages/`, `routes/`), a directory name is part of a URL and does not group code. There, `new`, `old`, `other`, and `general` are permitted. Example: `app/projects/new/page.tsx` serves the URL `/projects/new`.
 
 Bad: `src/utils/format.ts`, `src/helpers/retry.py`.
 Good: `src/currency/format.ts`, `src/http/retry.py`.

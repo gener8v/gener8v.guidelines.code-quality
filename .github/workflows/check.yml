@@ -23,9 +23,13 @@ jobs:
         with:
           node-version: "22"
       - name: Install the TypeScript compiler outside the repository
+        working-directory: ${{ runner.temp }}
         run: |
-          npm install --no-audit --no-fund --prefix "$RUNNER_TEMP/cq-typescript" typescript
-          echo "CQ_TYPESCRIPT=$RUNNER_TEMP/cq-typescript/node_modules/typescript" >> "$GITHUB_ENV"
+          mkdir cq-typescript && cd cq-typescript
+          npm init --yes > /dev/null
+          npm install --no-audit --no-fund typescript
+          test -f node_modules/typescript/package.json
+          echo "CQ_TYPESCRIPT=$PWD/node_modules/typescript" >> "$GITHUB_ENV"
       - name: Guidelines, defaults and generated files agree
         run: python3 scripts/build_index.py --check
       - name: Generator tests
