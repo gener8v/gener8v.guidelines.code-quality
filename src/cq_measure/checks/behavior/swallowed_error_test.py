@@ -35,6 +35,11 @@ class SwallowedErrorTest(unittest.TestCase):
         found = findings_for({"a.py": PY}, "swallowed-error")
         self.assertEqual([(f.line, f.severity) for f in found], [(3, "fail"), (7, "fail")])
 
+    def test_test_files_get_a_warning(self):
+        found = findings_for({"a.test.ts": "afterEach(() => rm(dir).catch(() => {}));\n", "b_test.py": PY}, "swallowed-error")
+        self.assertEqual({f.severity for f in found}, {"warn"})
+        self.assertEqual(len(found), 3)
+
     def test_typescript(self):
         self.assertEqual([f.line for f in findings_for({"a.ts": TS}, "swallowed-error")], [1, 2, 3, 4])
 

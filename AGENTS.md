@@ -124,7 +124,7 @@ The text after each rule shows how it is measured. A check ID with `warn` and `f
 
 ### 12. Errors ([full text](https://github.com/gener8v/gener8v.guidelines.code-quality/blob/main/guidelines/behavior/12-errors.md))
 
-- **12.1** Never swallow an error. *`swallowed-error` fail*
+- **12.1** Never swallow an error. *`swallowed-error` fail (warn in test files)*
 - **12.2** Catch only the errors that you can handle. *judged*
 - **12.3** Do not hide a failure behind a default value. *judged*
 - **12.4** Fail closed. *judged*

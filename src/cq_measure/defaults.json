@@ -53,7 +53,7 @@
     "unused-symbol": {"rule": "7.3", "severity": "warn"},
     "commented-code": {"rule": "7.4", "severity": "warn", "min_lines": 3},
     "type-escape": {"rule": "11.3", "severity": "warn"},
-    "swallowed-error": {"rule": "12.1", "severity": "fail"},
+    "swallowed-error": {"rule": "12.1", "severity": "fail", "test_severity": "warn"},
     "todo-without-issue": {"rule": "14.4", "severity": "warn"},
     "secret-literal": {"rule": "16.1", "severity": "fail"},
     "debug-output": {"rule": "18.4", "severity": "warn"},

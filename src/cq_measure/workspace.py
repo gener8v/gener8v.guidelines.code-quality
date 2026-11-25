@@ -12,6 +12,7 @@ from pathlib import Path
 from cq_measure.imports.graph import ModuleGraph, build_graph
 from cq_measure.imports.script_exports import script_exports
 from cq_measure.metrics.file_metrics import classes_of, functions_of
+from cq_measure.metrics.typescript_compiler import CompilerResult, measure_with_compiler
 from cq_measure.source.comments import comments_of
 from cq_measure.source.directory import build_directories
 from cq_measure.source.discovery import discover
@@ -57,12 +58,15 @@ class Workspace:
             self._memo[key] = compute(source)
         return self._memo[key]
 
-    def repository_fact(self, kind: str, compute):
-        """Compute a fact about the whole repository once."""
+    def repository_fact(self, kind: str, compute=None):
+        """Compute a fact about the whole repository once.
+
+        Without `compute`, return the fact if it is already known, or None.
+        """
         key = (kind, "")
-        if key not in self._memo:
+        if key not in self._memo and compute is not None:
             self._memo[key] = compute()
-        return self._memo[key]
+        return self._memo.get(key)
 
     def generated(self, source: SourceFile) -> bool:
         return self.cached("generated", source, is_generated)
@@ -78,11 +82,11 @@ class Workspace:
 
     def functions(self, source: SourceFile) -> list:
         """Return the function measures of a Python, TypeScript, or JavaScript file."""
-        return self.cached("functions", source, lambda s: functions_of(s, self.python_tree(s), self.scan))
+        return self.cached("functions", source, lambda s: functions_of(s, self.python_tree(s), self.scan, compiled_for(self, s)))
 
     def classes(self, source: SourceFile) -> list:
         """Return the classes (and TypeScript interfaces) of a file."""
-        return self.cached("classes", source, lambda s: classes_of(s, self.python_tree(s), self.scan))
+        return self.cached("classes", source, lambda s: classes_of(s, self.python_tree(s), self.scan, compiled_for(self, s)))
 
     def exports(self, source: SourceFile) -> list:
         """Return the exports of a TypeScript or JavaScript file."""
@@ -106,6 +110,26 @@ def load_workspace(root: Path, config: dict) -> Workspace:
 def all_classes(workspace: Workspace) -> list:
     """Return (file, class info) for every class and interface in the repository."""
     return workspace.repository_fact("classes", lambda: [(s, info) for s in workspace.sources for info in workspace.classes(s)])
+
+
+def compiled_for(workspace: Workspace, source: SourceFile) -> CompilerResult | None:
+    """Return the compiler measures for a TypeScript or JavaScript file, or None for other languages.
+
+    The first call measures every TypeScript and JavaScript file of the repository at once.
+    """
+    if source.language not in SCRIPT_LANGUAGES:
+        return None
+    return workspace.repository_fact("typescript", lambda: measure_with_compiler(workspace.root, _script_paths(workspace)))
+
+
+def _script_paths(workspace: Workspace) -> list[str]:
+    return [source.path for source in workspace.sources if source.language in SCRIPT_LANGUAGES]
+
+
+def typescript_status(workspace: Workspace) -> dict | None:
+    """Say how the TypeScript and JavaScript functions were measured, or None when no check measured them."""
+    compiled = workspace.repository_fact("typescript")
+    return compiled.status if compiled is not None else None
 
 
 def _parse_python(source: SourceFile) -> ast.Module | None:

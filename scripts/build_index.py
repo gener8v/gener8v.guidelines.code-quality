@@ -35,6 +35,7 @@ RULE_RE = re.compile(r"^### (\d+)\.(\d+) (.+)$")
 MEASURE_RE = re.compile(r"^\*\*Measure:\*\* (.+)$")
 CHECK_RE = re.compile(r"`([a-z][a-z-]+)` — (warn|fail)(?: above (\d+), fail above (\d+))?")
 TEST_RE = re.compile(r"Test files: warn above (\d+), fail above (\d+)")
+TEST_SEVERITY_RE = re.compile(r"Test files: (warn|fail)\.")
 
 
 @dataclass
@@ -45,6 +46,7 @@ class Check:
     fail: int | None = None
     test_warn: int | None = None
     test_fail: int | None = None
+    test_severity: str | None = None
 
 
 @dataclass
@@ -74,6 +76,9 @@ def parse_measure(text: str) -> list[Check]:
     test = TEST_RE.search(text)
     if test and checks:
         checks[0].test_warn, checks[0].test_fail = int(test.group(1)), int(test.group(2))
+    test_severity = TEST_SEVERITY_RE.search(text)
+    if test_severity and checks:
+        checks[0].test_severity = test_severity.group(1)
     return checks
 
 
@@ -135,6 +140,8 @@ def compare_check(rule: Rule, check: Check, spec: dict, errors: list[str]) -> No
                 errors.append(f"{where}: {key} is {value} in the guideline, {spec.get(key)} in defaults.json")
     elif spec.get("severity") != check.severity:
         errors.append(f"{where}: severity is {check.severity} in the guideline, {spec.get('severity')} in defaults.json")
+    if spec.get("test_severity") != check.test_severity:
+        errors.append(f"{where}: test-file severity is {check.test_severity} in the guideline, {spec.get('test_severity')} in defaults.json")
 
 
 def all_rules(parts: list[tuple[str, list[Section]]]):
@@ -169,6 +176,8 @@ def describe_measure(rule: Rule) -> str:
             text = f"`{check.check_id}` warn > {check.warn}, fail > {check.fail}"
         else:
             text = f"`{check.check_id}` {check.severity}"
+        if check.test_severity:
+            text += f" ({check.test_severity} in test files)"
         texts.append(text)
     return "; ".join(texts)
 

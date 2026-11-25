@@ -17,6 +17,10 @@ class ParseMeasureTest(unittest.TestCase):
         self.assertEqual([("root-files", "warn"), ("root-source", "fail")],
                          [(c.check_id, c.severity) for c in checks])
 
+    def test_reads_a_test_file_severity(self):
+        (check,) = build_index.parse_measure("`swallowed-error` — fail. Test files: warn.")
+        self.assertEqual(("fail", "warn"), (check.severity, check.test_severity))
+
     def test_judged_rule_has_no_checks(self):
         self.assertEqual([], build_index.parse_measure("judged (self-check)."))
 
@@ -53,6 +57,13 @@ class CompareDefaultsTest(unittest.TestCase):
         defaults = {"checks": {"file-lines": {"rule": "1.1", "warn": 300, "fail": 500}}}
         build_index.compare_defaults(self.parts_with("`file-lines` — warn above 300, fail above 500."), defaults, errors)
         self.assertEqual([], errors)
+
+    def test_reports_a_test_file_severity_mismatch(self):
+        errors = []
+        defaults = {"checks": {"swallowed-error": {"rule": "1.1", "severity": "fail"}}}
+        build_index.compare_defaults(self.parts_with("`swallowed-error` — fail. Test files: warn."), defaults, errors)
+        self.assertEqual(1, len(errors))
+        self.assertIn("test-file severity is warn", errors[0])
 
     def test_reports_a_threshold_mismatch(self):
         errors = []

@@ -1,5 +1,7 @@
-// ESLint flat config that mirrors the gener8v code-quality rules, exactly.
-// cq-measure approximates these limits for TypeScript and JavaScript; ESLint measures them from the AST.
+// ESLint flat config that sets the limits of the gener8v code-quality rules.
+// cq-measure gives the same complexity as ESLint. ESLint's max-lines-per-function counts the whole
+// function, and cq-measure counts only the body, so ESLint reports a function about two lines sooner.
+// ESLint's max-depth counts one level less for the blocks after an `else if` chain.
 //
 //   Rule 1.1  file-lines      max-lines               fail above 500 (warn above 300)
 //   Rule 4.1  function-lines  max-lines-per-function  fail above 80  (warn above 40)

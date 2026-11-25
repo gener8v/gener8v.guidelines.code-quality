@@ -6,6 +6,7 @@ import ast
 import re
 
 from cq_measure.source.language import SCRIPT_LANGUAGES
+from cq_measure.source.roles import is_testish
 
 _EMPTY_CATCH = re.compile(r"\bcatch\s*(?:\([^()]*\))?\s*\{\s*\}")
 _NOOP_PROMISE_CATCH = re.compile(
@@ -57,4 +58,4 @@ def check_swallowed_error(workspace, emit) -> None:
         else:
             continue
         for line, message in found:
-            emit.flag((source.path, line), f"{message} {advice}")
+            emit.flag((source.path, line), f"{message} {advice}", test=is_testish(source.path))

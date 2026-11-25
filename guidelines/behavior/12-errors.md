@@ -4,9 +4,11 @@ An error that nobody sees is worse than a crash. A crash stops. A hidden error w
 
 ### 12.1 Never swallow an error
 
-**Measure:** `swallowed-error` — fail.
+**Measure:** `swallowed-error` — fail. Test files: warn.
 
 Do not write an empty `catch`, an `except: pass`, or a `.catch(() => {})`. When you catch an error, handle it, or add context and raise it again.
+
+In a test file, an empty `catch` is a warning, not a failure. A test can ignore an error on purpose, for example when the cleanup after a test removes a file that is possibly not there. An empty `catch` in a test can also hide a test failure. Thus, examine each one. If it is intentional, mark it with `cq-ignore swallowed-error: <reason>`.
 
 Bad:
 

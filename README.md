@@ -43,6 +43,12 @@ Useful options:
 | `--only file-lines,import-cycle` | Runs only the named checks |
 | `--list-checks` | Lists each check with its rule and limits |
 
+### TypeScript and JavaScript
+
+`cq-measure` measures TypeScript and JavaScript functions and classes with the TypeScript compiler. It uses the `typescript` package that the measured repository has installed, and it needs Node.js. The complexity is the same value that the ESLint `complexity` rule gives.
+
+If Node.js or the `typescript` package is not available, `cq-measure` approximates these measures, and the last line of its report says so. To use a different `typescript` package, set `CQ_TYPESCRIPT` to its path. To use the approximation, set `CQ_TYPESCRIPT=off`.
+
 ## Use with Claude Code
 
 ```
@@ -74,7 +80,7 @@ To accept one finding, add a comment with a reason: `cq-ignore file-lines: gener
 
 ## Linter configuration
 
-[`configs/eslint.config.mjs`](configs/eslint.config.mjs) and [`configs/ruff.toml`](configs/ruff.toml) set the limits of section 4 in ESLint and Ruff. `cq-measure` measures Python functions exactly. For TypeScript and JavaScript its function measures are approximate, so use the ESLint configuration for exact results.
+[`configs/eslint.config.mjs`](configs/eslint.config.mjs) and [`configs/ruff.toml`](configs/ruff.toml) set the limits of section 4 in ESLint and Ruff, for feedback in the editor.
 
 ## Repository layout
 

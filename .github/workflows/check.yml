@@ -19,11 +19,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install the TypeScript compiler outside the repository
+        run: |
+          npm install --no-audit --no-fund --prefix "$RUNNER_TEMP/cq-typescript" typescript
+          echo "CQ_TYPESCRIPT=$RUNNER_TEMP/cq-typescript/node_modules/typescript" >> "$GITHUB_ENV"
       - name: Guidelines, defaults and generated files agree
         run: python3 scripts/build_index.py --check
       - name: Generator tests
         run: python3 -m unittest discover -s scripts -p "*_test.py"
-      - name: cq-measure tests
+      - name: cq-measure tests with the TypeScript compiler
         run: PYTHONPATH=src python3 -m unittest discover -s src -p "*_test.py" -t src
+      - name: cq-measure tests with the approximation
+        run: CQ_TYPESCRIPT=off PYTHONPATH=src python3 -m unittest discover -s src -p "*_test.py" -t src
+      - name: TypeScript measurer tests
+        run: node --test src/cq_measure/metrics/measure-typescript.test.cjs
       - name: cq-measure on this repository
         run: PYTHONPATH=src python3 -m cq_measure .

@@ -19,9 +19,12 @@ class Emitter:
         """Return an extra setting of this check, such as `min_lines`."""
         return self.spec.get(key, default)
 
-    def flag(self, at: Location, message: str) -> None:
-        """Report a finding at the check's fixed severity."""
-        self._add(at, self.spec.get("severity", "warn"), message)
+    def flag(self, at: Location, message: str, *, test: bool = False) -> None:
+        """Report a finding at the check's fixed severity, or at `test_severity` in a test file."""
+        severity = self.spec.get("severity", "warn")
+        if test:
+            severity = self.spec.get("test_severity", severity)
+        self._add(at, severity, message)
 
     def measure(self, at: Location, value: int, text: tuple[str, str], *, test: bool = False) -> None:
         """Report `value` when it is above the warn or fail threshold.

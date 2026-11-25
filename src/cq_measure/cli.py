@@ -11,7 +11,7 @@ from cq_measure.config import ConfigError, load_config
 from cq_measure.findings import severity_rank
 from cq_measure.output import render_json, render_text, summarize
 from cq_measure.runner import UsageError, changed_files, keep_paths, run_checks
-from cq_measure.workspace import load_workspace
+from cq_measure.workspace import load_workspace, typescript_status
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -46,7 +46,7 @@ def _run(args: argparse.Namespace) -> int:
     workspace = load_workspace(root, config)
     findings = run_checks(workspace, _only(args.only, config))
     findings = _filter(findings, root, args)
-    summary = summarize(findings, len(workspace.sources))
+    summary = summarize(findings, len(workspace.sources), typescript_status(workspace))
     render = render_json if args.format == "json" else render_text
     sys.stdout.write(render(findings, summary))
     threshold = severity_rank(args.fail_on)
@@ -90,6 +90,8 @@ def list_checks(config: dict) -> str:
         limits = spec.get("severity") or f"warn > {spec.get('warn')}, fail > {spec.get('fail')}"
         if "test_warn" in spec:
             limits += f" (tests: warn > {spec['test_warn']}, fail > {spec['test_fail']})"
+        if "test_severity" in spec:
+            limits += f" (tests: {spec['test_severity']})"
         state = "" if spec.get("enabled", True) else "  (disabled)"
         lines.append(f"{check_id:<22} {spec.get('rule') or '-':<5} {limits}{state}")
     return "\n".join(lines) + "\n"

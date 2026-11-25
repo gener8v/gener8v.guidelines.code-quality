@@ -24,6 +24,7 @@ PYTHONPATH="<plugin-root>/src" python3 -m cq_measure . --changed-since <base> --
 - For an audit of the whole repository, remove `--changed-since <base>`.
 - If `python3` is older than 3.10, run `uvx --from git+https://github.com/gener8v/gener8v.guidelines.code-quality cq-measure .` with the same options.
 - `--changed-since` measures the whole repository, because import cycles and orphan files need the full graph. It reports only the findings in the changed files.
+- If `summary.typescript.measured_by` is `approximation`, the function measures of TypeScript and JavaScript are approximate. Give the reason in your report.
 
 Also run the checks of the project: formatter, linter, type checker, and tests (rule 18.1).
 

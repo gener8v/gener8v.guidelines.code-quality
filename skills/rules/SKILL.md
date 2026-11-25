@@ -133,7 +133,7 @@ Use these questions in this sequence when you add a file:
 
 ### 12. Errors ([full text](../../guidelines/behavior/12-errors.md))
 
-- **12.1** Never swallow an error. *`swallowed-error` fail*
+- **12.1** Never swallow an error. *`swallowed-error` fail (warn in test files)*
 - **12.2** Catch only the errors that you can handle. *judged*
 - **12.3** Do not hide a failure behind a default value. *judged*
 - **12.4** Fail closed. *judged*

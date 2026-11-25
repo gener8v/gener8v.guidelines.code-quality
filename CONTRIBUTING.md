@@ -11,8 +11,18 @@
 python3 scripts/build_index.py --check
 python3 -m unittest discover -s scripts -p "*_test.py"
 PYTHONPATH=src python3 -m unittest discover -s src -p "*_test.py" -t src
+node --test src/cq_measure/metrics/measure-typescript.test.cjs
 PYTHONPATH=src python3 -m cq_measure .
 ```
+
+The TypeScript measures need a `typescript` package. Install it outside the repository, and set `CQ_TYPESCRIPT` to its path for the last three commands:
+
+```
+npm install --prefix /tmp/cq-typescript typescript
+export CQ_TYPESCRIPT=/tmp/cq-typescript/node_modules/typescript
+```
+
+Without it, the Node.js tests and one Python test are skipped, and `cq-measure` uses the approximation.
 
 ## Add a rule
 
