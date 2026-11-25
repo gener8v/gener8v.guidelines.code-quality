@@ -1,0 +1,28 @@
+# Ruff configuration that mirrors the gener8v code-quality rules for Python.
+# cq-measure measures the same limits exactly from the Python syntax tree.
+#
+#   Rule 4.2  nesting      PLR1702  max-nested-blocks  fail above 4  (warn above 3)
+#   Rule 4.3  complexity   C901     max-complexity     fail above 15 (warn above 10)
+#   Rule 4.4  params       PLR0913  max-args           fail above 6  (warn above 4)
+#   Rule 4.1  (related)    PLR0915  max-statements     a statement count, not lines; 50 is close to 80 lines
+#
+# Ruff has one level per rule. These are the fail levels. For the warn levels,
+# use the commented values. Rule 1.1 (file length) has no Ruff rule; use cq-measure.
+# PLR1702 is a preview rule, so preview is on.
+
+preview = true
+
+[lint]
+select = ["C901", "PLR0913", "PLR0915", "PLR1702"]
+
+[lint.mccabe]
+max-complexity = 15
+# max-complexity = 10
+
+[lint.pylint]
+max-args = 6
+# max-args = 4
+max-statements = 50
+# max-statements = 25
+max-nested-blocks = 4
+# max-nested-blocks = 3

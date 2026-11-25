@@ -1,0 +1,22 @@
+{
+  "name": "code-quality",
+  "displayName": "gener8v code-quality rules",
+  "description": "Code-quality rules for coding agents, with measures: file size and naming, directory and package structure, dependency direction, function size, interfaces and abstraction, tests next to the tested file, duplication, and the behavior rules for a change (scope, errors, tests, dependencies, security, proof before 'done'). Two skills: rules (before you write code) and self-check (measure and review before you say done).",
+  "version": "0.1.0",
+  "author": {
+    "name": "gener8v"
+  },
+  "homepage": "https://github.com/gener8v/gener8v.guidelines.code-quality",
+  "repository": "https://github.com/gener8v/gener8v.guidelines.code-quality",
+  "license": "MIT",
+  "keywords": [
+    "code-quality",
+    "code-structure",
+    "agents",
+    "agents-md",
+    "linting",
+    "maintainability",
+    "testing",
+    "claude-code"
+  ]
+}

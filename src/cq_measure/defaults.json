@@ -1,0 +1,104 @@
+{
+  "checks": {
+    "file-lines": {"rule": "1.1", "warn": 300, "fail": 500, "test_warn": 500, "test_fail": 800},
+    "one-concept": {"rule": "1.2", "severity": "warn"},
+    "name-matches-export": {"rule": "1.3", "severity": "warn"},
+    "role-suffix": {"rule": "1.4", "severity": "warn"},
+    "file-name-case": {"rule": "1.5", "severity": "warn"},
+    "root-files": {"rule": "2.1", "warn": 15, "fail": 25},
+    "root-source": {
+      "rule": "2.1",
+      "severity": "fail",
+      "allow": [
+        "*.config.*", "*.setup.*", "conftest.py", "manage.py", "setup.py", "noxfile.py", "fabfile.py",
+        "build.rs", "*.d.ts", "middleware.*", "instrumentation.*", "Gruntfile.js", "gulpfile.js", "Gulpfile.js"
+      ]
+    },
+    "dir-files": {"rule": "2.2", "warn": 12, "fail": 20},
+    "dir-subdirs": {"rule": "2.2", "warn": 12, "fail": 20},
+    "dir-depth": {"rule": "2.3", "warn": 5, "fail": 7},
+    "vague-name": {"rule": "2.4", "severity": "fail"},
+    "package-by-layer": {
+      "rule": "2.5",
+      "severity": "warn",
+      "role_dirs": ["controllers", "services", "models", "repositories", "handlers", "views"],
+      "min_role_dirs": 3
+    },
+    "single-child-dir": {"rule": "2.6", "severity": "warn"},
+    "generated-placement": {"rule": "2.7", "severity": "warn", "dirs": ["generated", "gen", "__generated__"]},
+    "script-placement": {"rule": "2.7", "severity": "warn", "dirs": ["scripts", "script", "bin", "tools"]},
+    "dir-name-case": {"rule": "2.8", "severity": "warn"},
+    "deep-import": {"rule": "3.2", "severity": "fail"},
+    "relative-climb": {"rule": "3.3", "warn": 2, "fail": 3},
+    "layer-direction": {"rule": "3.4", "severity": "fail"},
+    "import-cycle": {"rule": "3.5", "severity": "fail"},
+    "file-cycle": {"rule": "3.5", "severity": "warn"},
+    "fan-out": {"rule": "3.6", "warn": 12, "fail": 20},
+    "function-lines": {"rule": "4.1", "warn": 40, "fail": 80},
+    "nesting": {"rule": "4.2", "warn": 3, "fail": 4},
+    "complexity": {"rule": "4.3", "warn": 10, "fail": 15},
+    "params": {"rule": "4.4", "warn": 4, "fail": 6},
+    "flag-param": {"rule": "4.5", "severity": "warn"},
+    "class-methods": {"rule": "4.6", "warn": 15, "fail": 25},
+    "single-implementation": {"rule": "5.1", "severity": "warn"},
+    "interface-size": {"rule": "5.3", "warn": 7, "fail": 12},
+    "pass-through": {"rule": "5.5", "severity": "warn", "min_methods": 3},
+    "inheritance-depth": {"rule": "5.6", "warn": 2, "fail": 3},
+    "impl-naming": {"rule": "5.7", "severity": "warn"},
+    "test-colocation": {"rule": "6.1", "severity": "fail"},
+    "test-name": {"rule": "6.2", "severity": "warn"},
+    "untested-file": {"rule": "6.4", "severity": "warn"},
+    "duplicate-block": {"rule": "7.1", "severity": "warn", "min_lines": 8, "min_chars": 160},
+    "orphan-file": {"rule": "7.2", "severity": "warn"},
+    "unused-symbol": {"rule": "7.3", "severity": "warn"},
+    "commented-code": {"rule": "7.4", "severity": "warn", "min_lines": 3},
+    "type-escape": {"rule": "11.3", "severity": "warn"},
+    "swallowed-error": {"rule": "12.1", "severity": "fail"},
+    "todo-without-issue": {"rule": "14.4", "severity": "warn"},
+    "secret-literal": {"rule": "16.1", "severity": "fail"},
+    "debug-output": {"rule": "18.4", "severity": "warn"},
+    "suppression-reason": {"rule": null, "severity": "warn"}
+  },
+  "ignore": [
+    "node_modules/**", "dist/**", "build/**", ".venv/**", "venv/**", "vendor/**",
+    "coverage/**", ".next/**", "target/**", "**/__pycache__/**"
+  ],
+  "file_case": {
+    "python": "snake",
+    "go": "snake",
+    "rust": "snake",
+    "ruby": "snake",
+    "typescript": "kebab",
+    "javascript": "kebab",
+    "tsx": "auto",
+    "jsx": "auto",
+    "java": "pascal",
+    "kotlin": "pascal",
+    "csharp": "pascal",
+    "swift": "pascal"
+  },
+  "vague_names": [
+    "utils", "util", "helpers", "helper", "misc", "common", "stuff", "general",
+    "other", "temp", "tmp", "new", "old"
+  ],
+  "role_words": {
+    "repository": ["repo"],
+    "service": ["svc"],
+    "controller": ["ctrl"],
+    "handler": [],
+    "schema": [],
+    "store": [],
+    "hook": []
+  },
+  "layers": {
+    "inner": ["domain", "core", "model", "models", "entities"],
+    "outer": ["infrastructure", "infra", "adapters", "db", "persistence", "api", "http", "web", "ui", "cli"]
+  },
+  "cross_cutting_test_dirs": ["e2e", "integration", "acceptance", "contract", "smoke", "load", "perf", "performance"],
+  "entry_points": [
+    "**/main.*", "**/__main__.py", "**/__init__.py", "**/index.*", "**/app/**", "**/pages/**", "**/routes/**",
+    "**/*.config.*", "**/conftest.py", "**/setup.py", "**/manage.py", "**/migrations/**", "**/*.stories.*",
+    "**/middleware.*", "**/instrumentation.*"
+  ],
+  "public_symbols": []
+}

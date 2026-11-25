@@ -1,0 +1,29 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Guidelines, defaults and generated files agree
+        run: python3 scripts/build_index.py --check
+      - name: Generator tests
+        run: python3 -m unittest discover -s scripts -p "*_test.py"
+      - name: cq-measure tests
+        run: PYTHONPATH=src python3 -m unittest discover -s src -p "*_test.py" -t src
+      - name: cq-measure on this repository
+        run: PYTHONPATH=src python3 -m cq_measure .

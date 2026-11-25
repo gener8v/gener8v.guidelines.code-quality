@@ -1,0 +1,19 @@
+{
+  "name": "gener8v-code-quality",
+  "owner": {
+    "name": "gener8v"
+  },
+  "metadata": {
+    "description": "Code-quality rules for coding agents, with a dependency-free measuring tool.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "code-quality",
+      "source": "./",
+      "description": "Code-quality rules for coding agents, with measures: structure (file size, naming, directories, packages, functions, interfaces, test placement, duplication) and behavior (scope, errors, tests, dependencies, security, proof before 'done').",
+      "version": "0.1.0",
+      "strict": true
+    }
+  ]
+}
