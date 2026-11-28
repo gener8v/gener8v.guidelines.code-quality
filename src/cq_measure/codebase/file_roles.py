@@ -6,7 +6,7 @@ import posixpath
 import re
 
 from cq_measure.codebase.globs import matches_any
-from cq_measure.codebase.language import SCRIPT_LANGUAGES, family_of, language_of
+from cq_measure.codebase.language import JAVASCRIPT_LANGUAGES, family_of, language_of
 from cq_measure.codebase.package_roots import parts_of
 
 TEST_DIRS = frozenset({"tests", "test", "__tests__", "spec", "specs"})
@@ -104,7 +104,7 @@ def is_cli_entry(source) -> bool:
 
 def in_route_tree(path: str) -> bool:
     """Return True for a TypeScript or JavaScript file below `app/`, `pages/`, or `routes/`."""
-    if language_of(path) not in SCRIPT_LANGUAGES:
+    if language_of(path) not in JAVASCRIPT_LANGUAGES:
         return False
     return any(part in ROUTE_DIRS for part in parts_of(posixpath.dirname(path)))
 
@@ -112,7 +112,7 @@ def in_route_tree(path: str) -> bool:
 def is_framework_file(path: str) -> bool:
     """Return True for names that a framework requires, such as Next.js `page.tsx`."""
     stem = posixpath.basename(path).split(".")[0]
-    return family_of(language_of(path)) == "script" and stem in FRAMEWORK_STEMS
+    return family_of(language_of(path)) == "javascript" and stem in FRAMEWORK_STEMS
 
 
 def is_entry_point(source, patterns) -> bool:

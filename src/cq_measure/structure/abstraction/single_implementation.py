@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 
-from cq_measure.codebase import SCRIPT_LANGUAGES
+from cq_measure.codebase import JAVASCRIPT_LANGUAGES
 from cq_measure.structure.classes import all_classes
 
 
@@ -23,7 +23,7 @@ def implementations(workspace) -> dict[str, list[str]]:
 def structural_uses(workspace, name: str) -> int:
     """Count object literals typed as `name` (`: Name = {`, `satisfies Name`, `as Name`)."""
     pattern = re.compile(rf"(?::\s*{name}\s*=\s*\{{|\bsatisfies\s+{name}\b|\bas\s+{name}\b)")
-    return sum(len(pattern.findall(workspace.scan(s).code)) for s in workspace.sources if s.language in SCRIPT_LANGUAGES)
+    return sum(len(pattern.findall(workspace.scan(s).code)) for s in workspace.sources if s.language in JAVASCRIPT_LANGUAGES)
 
 
 def check_single_implementation(workspace, emit) -> None:

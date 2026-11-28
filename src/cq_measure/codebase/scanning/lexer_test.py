@@ -33,8 +33,8 @@ class LexerTest(unittest.TestCase):
         scan = scan_source("<p>Don't {x}</p>\nfunction f() {}\n")
         self.assertIn("function f() {}", scan.code)
 
-    def test_char_literals_outside_script(self):
-        scan = scan_source("fn f<'a>(x: &'a str) { let c = '{'; }\n", script=False)
+    def test_char_literals_outside_javascript(self):
+        scan = scan_source("fn f<'a>(x: &'a str) { let c = '{'; }\n", javascript=False)
         self.assertEqual(scan.code.count("{"), 1)
 
     def test_helpers(self):

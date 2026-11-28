@@ -1,7 +1,9 @@
 import unittest
 
 from cq_measure.codebase import scan_source
-from cq_measure.structure.functions.approximation.script_metrics import measure_script
+from cq_measure.structure.functions.approximation.javascript_metrics import (
+    measure_javascript,
+)
 
 SOURCE = """function route(req, res) {
   if (req.a && req.b) {
@@ -19,9 +21,9 @@ SOURCE = """function route(req, res) {
 """
 
 
-class ScriptMetricsTest(unittest.TestCase):
+class JavaScriptMetricsTest(unittest.TestCase):
     def setUp(self):
-        self.measures = {m.name: m for m in measure_script(scan_source(SOURCE), SOURCE.splitlines())}
+        self.measures = {m.name: m for m in measure_javascript(scan_source(SOURCE), SOURCE.splitlines())}
 
     def test_outer_function(self):
         route = self.measures["route"]

@@ -13,7 +13,7 @@ from cq_measure.codebase import (
 )
 from cq_measure.structure.files import normalize
 
-MEASURED_FAMILIES = frozenset({"python", "script", "go", "jvm", "ruby"})
+MEASURED_FAMILIES = frozenset({"python", "javascript", "go", "jvm", "ruby"})
 
 
 GRAPH_LANGUAGES = frozenset({"python", "typescript", "tsx", "javascript", "jsx"})

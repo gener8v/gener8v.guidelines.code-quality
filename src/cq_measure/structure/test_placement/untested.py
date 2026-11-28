@@ -6,7 +6,7 @@ import posixpath
 import re
 
 from cq_measure.codebase import (
-    SCRIPT_LANGUAGES,
+    JAVASCRIPT_LANGUAGES,
     family_of,
     is_config_name,
     is_declaration,
@@ -38,7 +38,7 @@ def holds_logic(workspace, source) -> bool:
     if source.language == "python":
         tree = workspace.python_tree(source)
         return bool(tree) and has_logic(tree)
-    if source.language in SCRIPT_LANGUAGES:
+    if source.language in JAVASCRIPT_LANGUAGES:
         return bool(workspace.functions(source))
     if source.language == "go":
         return bool(_GO_FUNCTION.search(source.text))
@@ -46,7 +46,7 @@ def holds_logic(workspace, source) -> bool:
 
 
 def _exempt(workspace, source) -> bool:
-    if family_of(source.language) not in ("python", "script", "go") or is_testish(source.path):
+    if family_of(source.language) not in ("python", "javascript", "go") or is_testish(source.path):
         return True
     if source.stem in EXEMPT_STEMS or is_config_name(source.name) or is_framework_file(source.path):
         return True

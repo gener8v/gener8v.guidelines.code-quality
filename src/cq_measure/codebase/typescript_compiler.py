@@ -18,7 +18,7 @@ import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 
-SCRIPT = Path(__file__).with_name("measure-typescript.cjs")
+MEASURER = Path(__file__).with_name("measure-typescript.cjs")
 TIMEOUT_SECONDS = 600
 
 
@@ -54,7 +54,7 @@ def measure_with_compiler(root: Path, paths: list[str]) -> CompilerResult:
     request = json.dumps({"root": str(root), "files": paths, "typescript": override or None})
     try:
         completed = subprocess.run(
-            [node, str(SCRIPT)], input=request, capture_output=True, text=True, timeout=TIMEOUT_SECONDS, check=False
+            [node, str(MEASURER)], input=request, capture_output=True, text=True, timeout=TIMEOUT_SECONDS, check=False
         )
     except (OSError, subprocess.TimeoutExpired) as error:
         return CompilerResult(reason=f"Node.js did not complete: {error}")

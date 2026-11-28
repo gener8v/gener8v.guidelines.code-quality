@@ -10,7 +10,7 @@ from functools import cached_property
 from pathlib import Path
 
 from cq_measure.codebase import (
-    SCRIPT_LANGUAGES,
+    JAVASCRIPT_LANGUAGES,
     CompilerResult,
     SourceFile,
     build_directories,
@@ -22,7 +22,11 @@ from cq_measure.codebase import (
     scan_source,
 )
 from cq_measure.structure.classes import classes_of
-from cq_measure.structure.dependencies import ModuleGraph, build_graph, script_exports
+from cq_measure.structure.dependencies import (
+    ModuleGraph,
+    build_graph,
+    javascript_exports,
+)
 from cq_measure.structure.functions import functions_of
 
 _IDENTIFIER = re.compile(r"[A-Za-z_$][\w$]*")
@@ -78,7 +82,7 @@ class Workspace:
         return self.cached("ast", source, _parse_python)
 
     def scan(self, source: SourceFile):
-        return self.cached("scan", source, lambda s: scan_source(s.text, script=s.language in SCRIPT_LANGUAGES))
+        return self.cached("scan", source, lambda s: scan_source(s.text, javascript=s.language in JAVASCRIPT_LANGUAGES))
 
     def comments(self, source: SourceFile) -> list:
         return self.cached("comments", source, lambda s: comments_of(s, self.scan))
@@ -94,7 +98,7 @@ class Workspace:
     def exports(self, source: SourceFile) -> list:
         """Return the exports of a TypeScript or JavaScript file."""
         jsx = source.language in ("tsx", "jsx")
-        return self.cached("exports", source, lambda s: script_exports(self.scan(s), jsx=jsx))
+        return self.cached("exports", source, lambda s: javascript_exports(self.scan(s), jsx=jsx))
 
     @cached_property
     def mentions(self) -> Counter:
@@ -115,13 +119,13 @@ def compiled_for(workspace: Workspace, source: SourceFile) -> CompilerResult | N
 
     The first call measures every TypeScript and JavaScript file of the repository at once.
     """
-    if source.language not in SCRIPT_LANGUAGES:
+    if source.language not in JAVASCRIPT_LANGUAGES:
         return None
-    return workspace.repository_fact("typescript", lambda: measure_with_compiler(workspace.root, _script_paths(workspace)))
+    return workspace.repository_fact("typescript", lambda: measure_with_compiler(workspace.root, _javascript_paths(workspace)))
 
 
-def _script_paths(workspace: Workspace) -> list[str]:
-    return [source.path for source in workspace.sources if source.language in SCRIPT_LANGUAGES]
+def _javascript_paths(workspace: Workspace) -> list[str]:
+    return [source.path for source in workspace.sources if source.language in JAVASCRIPT_LANGUAGES]
 
 
 def typescript_status(workspace: Workspace) -> dict | None:

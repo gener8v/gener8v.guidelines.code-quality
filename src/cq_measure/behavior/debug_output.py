@@ -6,7 +6,7 @@ import ast
 import re
 
 from cq_measure.codebase import (
-    SCRIPT_LANGUAGES,
+    JAVASCRIPT_LANGUAGES,
     is_cli_entry,
     is_config_name,
     is_declaration,
@@ -17,7 +17,7 @@ _CONSOLE = re.compile(r"\bconsole\.(log|debug)\s*\(|(?<![\w$.])debugger(?![\w$])
 DEBUGGER_MODULES = frozenset({"pdb", "ipdb", "pudb"})
 
 
-def script_debug(scan) -> list[tuple[int, str]]:
+def javascript_debug(scan) -> list[tuple[int, str]]:
     found = []
     for match in _CONSOLE.finditer(scan.code):
         label = f"console.{match.group(1)}()" if match.group(1) else "debugger"
@@ -46,8 +46,8 @@ def _findings(workspace, source) -> list[tuple[int, str]]:
     if source.language == "python":
         tree = workspace.python_tree(source)
         return python_debug(tree) if tree else []
-    if source.language in SCRIPT_LANGUAGES and not is_declaration(source.path):
-        return script_debug(workspace.scan(source))
+    if source.language in JAVASCRIPT_LANGUAGES and not is_declaration(source.path):
+        return javascript_debug(workspace.scan(source))
     return []
 
 

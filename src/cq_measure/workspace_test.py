@@ -17,12 +17,12 @@ class WorkspaceTest(unittest.TestCase):
     def test_facts_per_file(self):
         with fixture_repo(FILES) as root:
             workspace = load_workspace(root, load_defaults())
-            python, broken, script = (workspace.by_path[p] for p in ("pkg/a.py", "pkg/broken.py", "web/b.ts"))
+            python, broken, typescript = (workspace.by_path[p] for p in ("pkg/a.py", "pkg/broken.py", "web/b.ts"))
             self.assertEqual([s.path for s in workspace.sources], ["pkg/a.py", "pkg/broken.py", "web/b.ts"])
             self.assertIsNone(workspace.python_tree(broken))
             self.assertEqual([f.name for f in workspace.functions(python)], ["f"])
-            self.assertEqual([c.text for c in workspace.comments(script)], ["note"])
-            self.assertEqual([e.name for e in workspace.exports(script)], ["B"])
+            self.assertEqual([c.text for c in workspace.comments(typescript)], ["note"])
+            self.assertEqual([e.name for e in workspace.exports(typescript)], ["B"])
             self.assertEqual(sorted(info.name for _s, info in all_classes(workspace)), ["A", "B"])
             self.assertEqual(workspace.mentions["B"], 2)
             self.assertIn("pkg", workspace.directories)

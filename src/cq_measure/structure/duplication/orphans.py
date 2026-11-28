@@ -7,13 +7,13 @@ import re
 from functools import lru_cache
 
 from cq_measure.codebase import (
-    SCRIPT_LANGUAGES,
+    JAVASCRIPT_LANGUAGES,
     is_declaration,
     is_entry_point,
     is_testish,
 )
 
-GRAPH_LANGUAGES = SCRIPT_LANGUAGES | {"python"}
+GRAPH_LANGUAGES = JAVASCRIPT_LANGUAGES | {"python"}
 
 
 def reference_tokens(path: str) -> list[str]:

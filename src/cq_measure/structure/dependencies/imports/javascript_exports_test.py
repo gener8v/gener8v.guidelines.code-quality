@@ -1,7 +1,9 @@
 import unittest
 
 from cq_measure.codebase import scan_source
-from cq_measure.structure.dependencies.imports.script_exports import script_exports
+from cq_measure.structure.dependencies.imports.javascript_exports import (
+    javascript_exports,
+)
 
 SOURCE = """export function Button() { return null; }
 export const Card = ({ x }) => x;
@@ -15,9 +17,9 @@ export { d } from './d';
 """
 
 
-class ScriptExportsTest(unittest.TestCase):
+class JavaScriptExportsTest(unittest.TestCase):
     def test_kinds_components_and_lists(self):
-        found = {e.name: e for e in script_exports(scan_source(SOURCE), jsx=True)}
+        found = {e.name: e for e in javascript_exports(scan_source(SOURCE), jsx=True)}
         self.assertTrue(found["Button"].component)
         self.assertTrue(found["Card"].component)
         self.assertFalse(found["Styles"].component)
@@ -28,7 +30,7 @@ class ScriptExportsTest(unittest.TestCase):
         self.assertNotIn("d", found)
 
     def test_no_components_outside_jsx(self):
-        found = script_exports(scan_source("export function Button() {}\n"), jsx=False)
+        found = javascript_exports(scan_source("export function Button() {}\n"), jsx=False)
         self.assertFalse(found[0].component)
 
 

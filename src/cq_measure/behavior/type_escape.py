@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 import re
 
-from cq_measure.codebase import SCRIPT_LANGUAGES, is_declaration
+from cq_measure.codebase import JAVASCRIPT_LANGUAGES, is_declaration
 
 _TS_ANY = re.compile(r":\s*any\b(?![\w$])|\bas\s+any\b(?![\w$])|<any>")
 _TS_DIRECTIVE = re.compile(r"@ts-(?:ignore|nocheck)\b")
@@ -13,7 +13,7 @@ _ESLINT_DISABLE = re.compile(r"\beslint-disable(?:-next-line|-line)?\b")
 _PY_IGNORE = re.compile(r"\btype:\s*ignore\b(?!\[)")
 
 
-def script_escapes(workspace, source) -> dict[int, set[str]]:
+def javascript_escapes(workspace, source) -> dict[int, set[str]]:
     """Return, per line, the type escapes found in a TypeScript or JavaScript file."""
     found: dict[int, set[str]] = {}
     scan = workspace.scan(source)
@@ -78,8 +78,8 @@ def check_type_escape(workspace, emit) -> None:
             continue
         if source.language == "python":
             found = python_escapes(workspace, source)
-        elif source.language in SCRIPT_LANGUAGES:
-            found = script_escapes(workspace, source)
+        elif source.language in JAVASCRIPT_LANGUAGES:
+            found = javascript_escapes(workspace, source)
         else:
             continue
         for line, kinds in sorted(found.items()):

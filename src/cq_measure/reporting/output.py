@@ -9,7 +9,7 @@ from cq_measure.reporting.findings import Finding
 
 
 def summarize(findings: list[Finding], file_count: int, typescript: dict | None = None) -> dict:
-    """Count findings per severity and per check. `typescript` says how script files were measured."""
+    """Count findings per severity and per check. `typescript` says how TypeScript and JavaScript files were measured."""
     by_check: dict[str, Counter] = defaultdict(Counter)
     for finding in findings:
         by_check[finding.check][finding.severity] += 1

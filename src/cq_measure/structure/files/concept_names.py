@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 import re
 
-from cq_measure.codebase import SCRIPT_LANGUAGES, is_framework_file, is_testish
+from cq_measure.codebase import JAVASCRIPT_LANGUAGES, is_framework_file, is_testish
 
 ENTRY_STEMS = frozenset({"index", "__init__", "__main__", "main", "app", "mod", "lib"})
 
@@ -17,7 +17,7 @@ def concepts_of(workspace, source) -> tuple[list[tuple[str, int, str]], int]:
     """Return the public classes or components of a file (name, line, kind) and its count of public values."""
     if source.language == "python":
         return _python_concepts(workspace, source)
-    if source.language in SCRIPT_LANGUAGES:
+    if source.language in JAVASCRIPT_LANGUAGES:
         exports = workspace.exports(source)
         concepts = [(e.name, e.line, "component" if e.component else "class") for e in exports if e.is_concept]
         return concepts, len({e.name for e in exports if e.is_value})

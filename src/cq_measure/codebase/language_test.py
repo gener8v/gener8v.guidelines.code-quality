@@ -7,7 +7,7 @@ class LanguageTest(unittest.TestCase):
     def test_language_and_family(self):
         self.assertEqual(language_of("a/b.tsx"), "tsx")
         self.assertEqual(language_of("README.md"), None)
-        self.assertEqual(family_of("jsx"), "script")
+        self.assertEqual(family_of("jsx"), "javascript")
         self.assertEqual(family_of("kotlin"), "jvm")
         self.assertEqual(family_of("python"), "python")
 

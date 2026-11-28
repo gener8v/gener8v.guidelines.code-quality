@@ -7,7 +7,9 @@ from cq_measure.structure.dependencies.cycles import (
 from cq_measure.structure.dependencies.deep_import import check_deep_import
 from cq_measure.structure.dependencies.fan_out import check_fan_out
 from cq_measure.structure.dependencies.graph import ModuleGraph, build_graph
-from cq_measure.structure.dependencies.imports.script_exports import script_exports
+from cq_measure.structure.dependencies.imports.javascript_exports import (
+    javascript_exports,
+)
 from cq_measure.structure.dependencies.layer_direction import check_layer_direction
 from cq_measure.structure.dependencies.relative_climb import check_relative_climb
 
@@ -24,5 +26,5 @@ __all__ = [
     "CHECKS",
     "ModuleGraph",
     "build_graph",
-    "script_exports",
+    "javascript_exports",
 ]

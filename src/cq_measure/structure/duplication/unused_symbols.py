@@ -6,7 +6,7 @@ import ast
 import re
 
 from cq_measure.codebase import (
-    SCRIPT_LANGUAGES,
+    JAVASCRIPT_LANGUAGES,
     in_route_tree,
     is_config_name,
     is_declaration,
@@ -43,7 +43,7 @@ def _declared_names(workspace, source) -> list[tuple[str, int]]:
     if source.language == "python":
         tree = workspace.python_tree(source)
         return python_public_names(tree) if tree else []
-    if source.language in SCRIPT_LANGUAGES:
+    if source.language in JAVASCRIPT_LANGUAGES:
         return [(e.name, e.line) for e in workspace.exports(source) if not e.default]
     return []
 

@@ -1,6 +1,6 @@
 import unittest
 
-from cq_measure.codebase.scanning.comments import (
+from cq_measure.codebase.scanning.comment_extraction import (
     comments_of,
     hash_comments,
     python_comments,
@@ -14,7 +14,7 @@ class _File:
         self.text = text
 
 
-class CommentsTest(unittest.TestCase):
+class CommentExtractionTest(unittest.TestCase):
     def test_python_comments_ignore_strings(self):
         found = python_comments('x = "# not a comment"  # real\n# own line\n')
         self.assertEqual([(c.line, c.text, c.own_line) for c in found], [(1, "real", False), (2, "own line", True)])
@@ -24,8 +24,8 @@ class CommentsTest(unittest.TestCase):
         self.assertEqual([(c.line, c.text) for c in found], [(2, "note")])
 
     def test_dispatch_by_language(self):
-        script = comments_of(_File("typescript", "a(); // hi\n"), lambda f: scan_source(f.text))
-        self.assertEqual([c.text for c in script], ["hi"])
+        typescript = comments_of(_File("typescript", "a(); // hi\n"), lambda f: scan_source(f.text))
+        self.assertEqual([c.text for c in typescript], ["hi"])
         self.assertEqual(comments_of(_File(None, "# x\n"), None), [])
 
 

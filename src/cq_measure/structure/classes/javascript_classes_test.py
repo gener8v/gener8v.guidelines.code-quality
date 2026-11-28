@@ -1,7 +1,7 @@
 import unittest
 
 from cq_measure.codebase import scan_source
-from cq_measure.structure.classes.script_classes import script_classes
+from cq_measure.structure.classes.javascript_classes import javascript_classes
 from cq_measure.structure.functions import find_functions, match_brackets
 
 SOURCE = """export abstract class Store<T> extends Base implements IStore<T>, Clock {
@@ -18,11 +18,11 @@ export interface IStore<T> extends Reader, Writer {
 """
 
 
-class ScriptClassesTest(unittest.TestCase):
+class JavaScriptClassesTest(unittest.TestCase):
     def test_classes_and_interfaces(self):
         scan = scan_source(SOURCE)
         pairs = match_brackets(scan.code)
-        found = {c.name: c for c in script_classes(scan, find_functions(scan, pairs), pairs)}
+        found = {c.name: c for c in javascript_classes(scan, find_functions(scan, pairs), pairs)}
         store = found["Store"]
         self.assertEqual((store.kind, store.bases, store.implements), ("abstract", ("Base",), ("IStore", "Clock")))
         self.assertEqual(sorted(store.methods), ["load", "save", "size"])

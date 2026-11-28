@@ -6,7 +6,7 @@ import ast
 import re
 from collections import defaultdict
 
-from cq_measure.codebase import CODE_LANGUAGES, SCRIPT_LANGUAGES, is_testish
+from cq_measure.codebase import CODE_LANGUAGES, JAVASCRIPT_LANGUAGES, is_testish
 
 _BRACKETS_ONLY = re.compile(r"^[\[\](){};,]*$")
 _SCRIPT_IMPORT = re.compile(
@@ -23,7 +23,7 @@ def import_lines(workspace, source) -> set[int]:
         for node in ast.walk(tree) if tree else ():
             if isinstance(node, (ast.Import, ast.ImportFrom)):
                 lines.update(range(node.lineno, (node.end_lineno or node.lineno) + 1))
-    elif source.language in SCRIPT_LANGUAGES:
+    elif source.language in JAVASCRIPT_LANGUAGES:
         scan = workspace.scan(source)
         for match in _SCRIPT_IMPORT.finditer(scan.code):
             lines.update(range(scan.line_of(match.start()), scan.line_of(match.end() - 1) + 1))

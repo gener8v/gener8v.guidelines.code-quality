@@ -25,10 +25,10 @@ EXTENSIONS = {
     ".bash": "shell",
     ".zsh": "shell",
 }
-SCRIPT_LANGUAGES = frozenset({"typescript", "tsx", "javascript", "jsx"})
-C_LIKE_LANGUAGES = SCRIPT_LANGUAGES | {"go", "rust", "java", "kotlin", "csharp", "swift"}
+JAVASCRIPT_LANGUAGES = frozenset({"typescript", "tsx", "javascript", "jsx"})
+C_LIKE_LANGUAGES = JAVASCRIPT_LANGUAGES | {"go", "rust", "java", "kotlin", "csharp", "swift"}
 CODE_LANGUAGES = frozenset(EXTENSIONS.values()) - {"shell"}
-SCRIPT_EXTENSIONS = (".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs")
+JAVASCRIPT_EXTENSIONS = (".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs")
 DECLARATION_SUFFIXES = (".d.ts", ".d.mts", ".d.cts")
 
 
@@ -38,9 +38,9 @@ def language_of(path: str) -> str | None:
 
 
 def family_of(language: str | None) -> str | None:
-    """Group TypeScript and JavaScript as `script`, Java and Kotlin as `jvm`."""
-    if language in SCRIPT_LANGUAGES:
-        return "script"
+    """Group TypeScript and JavaScript as `javascript`, Java and Kotlin as `jvm`."""
+    if language in JAVASCRIPT_LANGUAGES:
+        return "javascript"
     if language in ("java", "kotlin"):
         return "jvm"
     return language

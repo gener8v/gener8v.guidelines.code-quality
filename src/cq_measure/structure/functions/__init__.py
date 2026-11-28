@@ -1,7 +1,7 @@
 """Checks for section 4: functions."""
 
-from cq_measure.structure.functions.approximation.script_functions import (
-    ScriptFunction,
+from cq_measure.structure.functions.approximation.javascript_functions import (
+    JavaScriptFunction,
     find_functions,
     match_brackets,
 )
@@ -28,7 +28,7 @@ CHECKS = {
 __all__ = [
     "CHECKS",
     "FUNCTIONS",
-    "ScriptFunction",
+    "JavaScriptFunction",
     "find_functions",
     "functions_of",
     "has_logic",

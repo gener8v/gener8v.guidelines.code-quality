@@ -10,7 +10,7 @@ EXTENSIONS = (".ts", ".tsx", ".d.ts", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".c
 _JS_TO_TS = {".js": (".ts", ".tsx"), ".jsx": (".tsx",), ".mjs": (".mts",), ".cjs": (".cts",)}
 
 
-class ScriptResolver:
+class JavaScriptResolver:
     """Maps a specifier to a file: relative paths, tsconfig aliases, `.js` to `.ts`, `index` files."""
 
     def __init__(self, known: set[str], aliases: dict[str, AliasConfig]):

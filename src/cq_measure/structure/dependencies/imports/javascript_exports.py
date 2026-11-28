@@ -20,7 +20,7 @@ VALUE_KINDS = frozenset({"function", "function*", "class", "const", "let", "var"
 
 
 @dataclass(frozen=True)
-class ScriptExport:
+class JavaScriptExport:
     """One exported name. `component` marks a React component in a TSX or JSX file."""
 
     name: str
@@ -39,20 +39,20 @@ class ScriptExport:
         return self.kind == "class" or self.component
 
 
-def script_exports(scan: Scan, *, jsx: bool) -> list[ScriptExport]:
+def javascript_exports(scan: Scan, *, jsx: bool) -> list[JavaScriptExport]:
     """Return the exports declared in a file. Re-exports (`export ... from`) are not included."""
     found = [_declared(scan, match, jsx=jsx) for match in _DECLARED.finditer(scan.code)]
     for match in _LOCAL_LIST.finditer(scan.code):
         kind = "type" if match.group(1) else "local"
         line = scan.line_of(match.start())
-        found.extend(ScriptExport(name, line, kind) for name in _list_names(match.group(2)))
+        found.extend(JavaScriptExport(name, line, kind) for name in _list_names(match.group(2)))
     return found
 
 
-def _declared(scan: Scan, match: re.Match, *, jsx: bool) -> ScriptExport:
+def _declared(scan: Scan, match: re.Match, *, jsx: bool) -> JavaScriptExport:
     kind, name = match.group(2), match.group(3)
     component = jsx and bool(_PASCAL.match(name)) and _looks_like_component(scan.code, match, kind)
-    return ScriptExport(name, scan.line_of(match.start()), kind, bool(match.group(1)), component)
+    return JavaScriptExport(name, scan.line_of(match.start()), kind, bool(match.group(1)), component)
 
 
 def _looks_like_component(code: str, match: re.Match, kind: str) -> bool:

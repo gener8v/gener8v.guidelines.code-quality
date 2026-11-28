@@ -5,7 +5,7 @@ from __future__ import annotations
 import ast
 import re
 
-from cq_measure.codebase import SCRIPT_LANGUAGES, is_testish
+from cq_measure.codebase import JAVASCRIPT_LANGUAGES, is_testish
 
 _EMPTY_CATCH = re.compile(r"\bcatch\s*(?:\([^()]*\))?\s*\{\s*\}")
 _NOOP_PROMISE_CATCH = re.compile(
@@ -38,7 +38,7 @@ def _reraises(handler: ast.ExceptHandler) -> bool:
     return any(isinstance(node, ast.Raise) and node.exc is None for node in ast.walk(handler))
 
 
-def script_swallows(scan) -> list[tuple[int, str]]:
+def javascript_swallows(scan) -> list[tuple[int, str]]:
     found = [(scan.line_of(m.start()), "The `catch` block is empty, so the error disappears.") for m in _EMPTY_CATCH.finditer(scan.code)]
     found += [(scan.line_of(m.start()), "The `.catch()` handler does nothing, so the error disappears.") for m in _NOOP_PROMISE_CATCH.finditer(scan.code)]
     return found
@@ -52,8 +52,8 @@ def check_swallowed_error(workspace, emit) -> None:
         if source.language == "python":
             tree = workspace.python_tree(source)
             found = python_swallows(tree) if tree else []
-        elif source.language in SCRIPT_LANGUAGES:
-            found = script_swallows(workspace.scan(source))
+        elif source.language in JAVASCRIPT_LANGUAGES:
+            found = javascript_swallows(workspace.scan(source))
         else:
             continue
         for line, message in found:

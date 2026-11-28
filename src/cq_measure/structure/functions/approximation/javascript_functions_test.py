@@ -1,7 +1,7 @@
 import unittest
 
 from cq_measure.codebase import scan_source
-from cq_measure.structure.functions.approximation.script_functions import (
+from cq_measure.structure.functions.approximation.javascript_functions import (
     count_params,
     find_functions,
     match_brackets,
@@ -24,7 +24,7 @@ const double = (n: number): number => n * 2;
 """
 
 
-class ScriptFunctionsTest(unittest.TestCase):
+class JavaScriptFunctionsTest(unittest.TestCase):
     def setUp(self):
         scan = scan_source(SOURCE)
         self.pairs = match_brackets(scan.code)

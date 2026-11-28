@@ -1,15 +1,17 @@
 import unittest
 
-from cq_measure.structure.dependencies.imports.script_resolver import ScriptResolver
+from cq_measure.structure.dependencies.imports.javascript_resolver import (
+    JavaScriptResolver,
+)
 from cq_measure.structure.dependencies.imports.tsconfig import AliasConfig
 
 KNOWN = {"src/app.ts", "src/billing/index.ts", "src/billing/rounding.ts", "src/ui/button.tsx", "src/lib/x.ts"}
 
 
-class ScriptResolverTest(unittest.TestCase):
+class JavaScriptResolverTest(unittest.TestCase):
     def setUp(self):
         aliases = {"": AliasConfig(None, {"@/*": ["src/*"]})}
-        self.resolver = ScriptResolver(KNOWN, aliases)
+        self.resolver = JavaScriptResolver(KNOWN, aliases)
 
     def test_relative_with_extension_swap_and_index(self):
         self.assertEqual(self.resolver.resolve("src/app.ts", "./billing"), "src/billing/index.ts")

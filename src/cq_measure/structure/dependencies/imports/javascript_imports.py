@@ -12,7 +12,7 @@ _STATEMENT_KEYWORD = re.compile(r"\b(import|export)\b(\s+type\b)?")
 
 
 @dataclass(frozen=True)
-class ScriptImport:
+class JavaScriptImport:
     """An import specifier such as `./billing` and the line that holds it."""
 
     line: int
@@ -20,14 +20,14 @@ class ScriptImport:
     type_only: bool
 
 
-def script_imports(scan: Scan) -> list[ScriptImport]:
+def javascript_imports(scan: Scan) -> list[JavaScriptImport]:
     """Return the specifiers of import, export-from, require, and dynamic import."""
     found = []
     for start, _end, value in scan.strings:
         before = scan.code[max(0, start - 300) : start]
         if not value or not _BEFORE_SPECIFIER.search(before):
             continue
-        found.append(ScriptImport(scan.line_of(start), value, _is_type_only(before)))
+        found.append(JavaScriptImport(scan.line_of(start), value, _is_type_only(before)))
     return found
 
 

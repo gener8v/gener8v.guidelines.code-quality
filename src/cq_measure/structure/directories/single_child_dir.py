@@ -13,10 +13,10 @@ def _lone_child_exempt(workspace, path: str) -> bool:
         return True
     if "/src/main" in "/" + path or "/src/test" in "/" + path:
         return True
-    return any(part in ROUTE_DIRS for part in parts) and _has_script_files(workspace, path)
+    return any(part in ROUTE_DIRS for part in parts) and _has_javascript_files(workspace, path)
 
 
-def _has_script_files(workspace, path: str) -> bool:
+def _has_javascript_files(workspace, path: str) -> bool:
     prefix = path + "/"
     return any(source.path.startswith(prefix) and source.language in ("tsx", "jsx", "typescript", "javascript") for source in workspace.sources)
 

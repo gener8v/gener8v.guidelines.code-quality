@@ -20,7 +20,7 @@ from cq_measure.codebase.file_roles import (
 from cq_measure.codebase.globs import matches_any
 from cq_measure.codebase.language import (
     CODE_LANGUAGES,
-    SCRIPT_LANGUAGES,
+    JAVASCRIPT_LANGUAGES,
     family_of,
     is_declaration,
     language_of,
@@ -32,7 +32,7 @@ from cq_measure.codebase.package_roots import (
     package_roots,
     parts_of,
 )
-from cq_measure.codebase.scanning.comments import comments_of, python_comments
+from cq_measure.codebase.scanning.comment_extraction import comments_of, python_comments
 from cq_measure.codebase.scanning.lexer import scan_source
 from cq_measure.codebase.scanning.scan import Scan
 from cq_measure.codebase.source_file import SourceFile
@@ -46,7 +46,7 @@ __all__ = [
     "CompilerResult",
     "GENERATED_DIRS",
     "ROUTE_DIRS",
-    "SCRIPT_LANGUAGES",
+    "JAVASCRIPT_LANGUAGES",
     "Scan",
     "SourceFile",
     "build_directories",

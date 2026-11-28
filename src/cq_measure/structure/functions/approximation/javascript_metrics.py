@@ -10,8 +10,8 @@ from __future__ import annotations
 import re
 
 from cq_measure.codebase import Scan
-from cq_measure.structure.functions.approximation.script_functions import (
-    ScriptFunction,
+from cq_measure.structure.functions.approximation.javascript_functions import (
+    JavaScriptFunction,
     find_functions,
     match_brackets,
 )
@@ -24,7 +24,7 @@ CONTROL_HEADERS = frozenset({"if", "for", "while", "switch", "catch", "with", "a
 CONTROL_WORDS = frozenset({"else", "try", "finally", "do", "catch"})
 
 
-def measure_script(scan: Scan, lines: list[str]) -> list[FunctionMeasure]:
+def measure_javascript(scan: Scan, lines: list[str]) -> list[FunctionMeasure]:
     """Return a measure for every function found in the file."""
     pairs = match_brackets(scan.code)
     functions = find_functions(scan, pairs)
@@ -33,7 +33,7 @@ def measure_script(scan: Scan, lines: list[str]) -> list[FunctionMeasure]:
     return [measurer.measure(function, [functions[i] for i in children[index]]) for index, function in enumerate(functions)]
 
 
-def child_functions(functions: list[ScriptFunction]) -> list[list[int]]:
+def child_functions(functions: list[JavaScriptFunction]) -> list[list[int]]:
     """Return, for each function, the indexes of the functions directly inside its body."""
     children: list[list[int]] = [[] for _ in functions]
     stack: list[int] = []
@@ -46,7 +46,7 @@ def child_functions(functions: list[ScriptFunction]) -> list[list[int]]:
     return children
 
 
-def _contains(outer: ScriptFunction, inner: ScriptFunction) -> bool:
+def _contains(outer: JavaScriptFunction, inner: JavaScriptFunction) -> bool:
     return outer.body_start < inner.body_start <= outer.body_end
 
 
@@ -56,7 +56,7 @@ class _Measurer:
         self.brackets = (pairs, {close: open_ for open_, close in pairs.items()})
         self.lines = lines
 
-    def measure(self, function: ScriptFunction, children: list[ScriptFunction]) -> FunctionMeasure:
+    def measure(self, function: JavaScriptFunction, children: list[JavaScriptFunction]) -> FunctionMeasure:
         if function.body_start == function.body_end:
             return FunctionMeasure(function.name, function.line, 1, 0, 1, function.params)
         code = self.scan.code
@@ -73,7 +73,7 @@ class _Measurer:
         )
 
 
-def own_segments(function: ScriptFunction, children: list[ScriptFunction]) -> list[tuple[int, int]]:
+def own_segments(function: JavaScriptFunction, children: list[JavaScriptFunction]) -> list[tuple[int, int]]:
     """Return the spans of the body that are not inside a nested function's body."""
     segments = []
     position = function.body_start + 1

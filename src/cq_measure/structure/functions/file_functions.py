@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from cq_measure.codebase import SCRIPT_LANGUAGES, CompilerResult, is_declaration
-from cq_measure.structure.functions.approximation.script_metrics import measure_script
+from cq_measure.codebase import JAVASCRIPT_LANGUAGES, CompilerResult, is_declaration
+from cq_measure.structure.functions.approximation.javascript_metrics import (
+    measure_javascript,
+)
 from cq_measure.structure.functions.function_measure import FunctionMeasure
 from cq_measure.structure.functions.python_functions import measure_python
 
@@ -16,8 +18,8 @@ def functions_of(source, tree, scan_of, compiled: CompilerResult | None = None) 
     """
     if source.language == "python":
         return measure_python(tree, source.lines) if tree else []
-    if source.language not in SCRIPT_LANGUAGES or is_declaration(source.path):
+    if source.language not in JAVASCRIPT_LANGUAGES or is_declaration(source.path):
         return []
     if compiled is not None and source.path in compiled.functions:
         return [FunctionMeasure(**item) for item in compiled.functions[source.path]]
-    return measure_script(scan_of(source), source.lines)
+    return measure_javascript(scan_of(source), source.lines)

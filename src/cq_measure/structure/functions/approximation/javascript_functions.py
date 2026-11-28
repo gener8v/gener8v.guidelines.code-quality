@@ -30,7 +30,7 @@ _OPENERS = {")": "(", "]": "[", "}": "{"}
 
 
 @dataclass(frozen=True)
-class ScriptFunction:
+class JavaScriptFunction:
     """A function, method, or arrow function. The body spans `body_start` to `body_end`."""
 
     name: str
@@ -54,10 +54,10 @@ def match_brackets(code: str) -> dict[int, int]:
     return pairs
 
 
-def find_functions(scan: Scan, pairs: dict[int, int]) -> list[ScriptFunction]:
+def find_functions(scan: Scan, pairs: dict[int, int]) -> list[JavaScriptFunction]:
     """Return the functions in source order. Functions inside type declarations are left out."""
     code = scan.code
-    found: dict[int, ScriptFunction] = {}
+    found: dict[int, JavaScriptFunction] = {}
     for start, end in pairs.items():
         if code[start] == "(":
             function = _from_parens(scan, pairs, start, end)
@@ -72,7 +72,7 @@ def find_functions(scan: Scan, pairs: dict[int, int]) -> list[ScriptFunction]:
     return sorted(kept, key=lambda function: function.body_start)
 
 
-def _from_parens(scan: Scan, pairs: dict[int, int], start: int, end: int) -> ScriptFunction | None:
+def _from_parens(scan: Scan, pairs: dict[int, int], start: int, end: int) -> JavaScriptFunction | None:
     code = scan.code
     kind, position = _after_params(code, end + 1, pairs)
     params = count_params(code[start + 1 : end])
@@ -83,17 +83,17 @@ def _from_parens(scan: Scan, pairs: dict[int, int], start: int, end: int) -> Scr
     name = _definition_name(code, start)
     if name is None:
         return None
-    return ScriptFunction(name, scan.line_of(start), params, position, pairs[position], True)
+    return JavaScriptFunction(name, scan.line_of(start), params, position, pairs[position], True)
 
 
-def _from_single(scan: Scan, pairs: dict[int, int], match: re.Match) -> ScriptFunction | None:
+def _from_single(scan: Scan, pairs: dict[int, int], match: re.Match) -> JavaScriptFunction | None:
     before = _skip_space_back(scan.code, match.start(1) - 1)
     if before >= 0 and scan.code[before] == ":":
         return None
     return _arrow(scan, pairs, match.start(1), (match.end(), 1))
 
 
-def _arrow(scan: Scan, pairs: dict[int, int], start: int, body: tuple[int, int]) -> ScriptFunction | None:
+def _arrow(scan: Scan, pairs: dict[int, int], start: int, body: tuple[int, int]) -> JavaScriptFunction | None:
     code = scan.code
     position, params = body
     prefix = code[max(0, start - 160) : start]
@@ -104,11 +104,11 @@ def _arrow(scan: Scan, pairs: dict[int, int], start: int, body: tuple[int, int])
         return None
     if code[position] in "{(" and position in pairs:
         name = _context_name(prefix) or "<anonymous>"
-        return ScriptFunction(name, scan.line_of(start), params, position, pairs[position], code[position] == "{")
+        return JavaScriptFunction(name, scan.line_of(start), params, position, pairs[position], code[position] == "{")
     assigned = _ASSIGNED.search(prefix)
     if assigned is None:
         return None
-    return ScriptFunction(assigned.group(1), scan.line_of(start), params, position, position, False)
+    return JavaScriptFunction(assigned.group(1), scan.line_of(start), params, position, position, False)
 
 
 def _after_params(code: str, index: int, pairs: dict[int, int]) -> tuple[str | None, int]:

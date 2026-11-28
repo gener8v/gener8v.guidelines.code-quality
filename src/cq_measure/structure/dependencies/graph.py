@@ -4,15 +4,17 @@ from __future__ import annotations
 
 from collections import defaultdict
 
-from cq_measure.codebase import SCRIPT_LANGUAGES
+from cq_measure.codebase import JAVASCRIPT_LANGUAGES
 from cq_measure.structure.dependencies.imports.import_record import ImportRecord
+from cq_measure.structure.dependencies.imports.javascript_imports import (
+    climb_of,
+    javascript_imports,
+)
+from cq_measure.structure.dependencies.imports.javascript_resolver import (
+    JavaScriptResolver,
+)
 from cq_measure.structure.dependencies.imports.python_imports import python_imports
 from cq_measure.structure.dependencies.imports.python_resolver import PythonResolver
-from cq_measure.structure.dependencies.imports.script_imports import (
-    climb_of,
-    script_imports,
-)
-from cq_measure.structure.dependencies.imports.script_resolver import ScriptResolver
 from cq_measure.structure.dependencies.imports.tsconfig import load_alias_configs
 
 
@@ -44,13 +46,13 @@ def build_graph(workspace) -> ModuleGraph:
     known = set(workspace.by_path)
     python = PythonResolver(known, workspace.package_roots)
     aliases = load_alias_configs(lambda path: workspace.by_path[path].text if path in known else None, known)
-    script = ScriptResolver(known, aliases)
+    script = JavaScriptResolver(known, aliases)
     records = {}
     for source in workspace.sources:
         if source.language == "python":
             records[source.path] = _python_records(workspace, source, python)
-        elif source.language in SCRIPT_LANGUAGES:
-            records[source.path] = _script_records(workspace, source, script)
+        elif source.language in JAVASCRIPT_LANGUAGES:
+            records[source.path] = _javascript_records(workspace, source, script)
     return ModuleGraph(records, {source.path for source in workspace.sources})
 
 
@@ -64,9 +66,9 @@ def _python_records(workspace, source, resolver: PythonResolver) -> list[ImportR
     return records
 
 
-def _script_records(workspace, source, resolver: ScriptResolver) -> list[ImportRecord]:
+def _javascript_records(workspace, source, resolver: JavaScriptResolver) -> list[ImportRecord]:
     records = []
-    for found in script_imports(workspace.scan(source)):
+    for found in javascript_imports(workspace.scan(source)):
         target = resolver.resolve(source.path, found.specifier)
         climb = climb_of(found.specifier) if found.specifier.startswith(".") else 0
         records.append(ImportRecord(found.line, found.specifier, climb, found.type_only, (), target))

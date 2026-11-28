@@ -36,9 +36,9 @@ def line_starts(text: str) -> list[int]:
     return [0] + [match.end() for match in re.finditer("\n", text)]
 
 
-def scan_source(text: str, *, script: bool = True) -> Scan:
-    """Lex `text`. With `script`, a `/` can start a JavaScript regex literal."""
-    lexer = _Lexer(text, script)
+def scan_source(text: str, *, javascript: bool = True) -> Scan:
+    """Lex `text`. With `javascript`, a `/` can start a JavaScript regex literal and a backtick a template."""
+    lexer = _Lexer(text, javascript)
     lexer.code(nested=False)
     starts = line_starts(text)
     scan = Scan("".join(lexer.out), [], lexer.strings, starts)
@@ -47,9 +47,9 @@ def scan_source(text: str, *, script: bool = True) -> Scan:
 
 
 class _Lexer:
-    def __init__(self, text: str, script: bool):
+    def __init__(self, text: str, javascript: bool):
         self.text = text
-        self.script = script
+        self.javascript = javascript
         self.pos = 0
         self.out: list[str] = []
         self.comments: list[tuple] = []
@@ -84,7 +84,7 @@ class _Lexer:
     def token(self, char: str) -> None:
         if char == "/":
             self.slash()
-        elif char == "`" and self.script:
+        elif char == "`" and self.javascript:
             self.template()
         elif char == "`":
             self.quoted_raw()
@@ -97,7 +97,7 @@ class _Lexer:
             self.line_comment()
         elif following == "*":
             self.block_comment()
-        elif self.script and self.regex_allowed() and self.regex():
+        elif self.javascript and self.regex_allowed() and self.regex():
             return
         else:
             self.emit("/")
@@ -148,7 +148,7 @@ class _Lexer:
         return True
 
     def quoted(self, quote: str) -> None:
-        if quote == "'" and not self.script and not _CHAR_LITERAL.match(self.text, self.pos):
+        if quote == "'" and not self.javascript and not _CHAR_LITERAL.match(self.text, self.pos):
             self.emit("'")
             self.pos += 1
             return

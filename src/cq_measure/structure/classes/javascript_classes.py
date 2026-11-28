@@ -6,7 +6,7 @@ import re
 
 from cq_measure.codebase import Scan
 from cq_measure.structure.classes.class_info import ClassInfo
-from cq_measure.structure.functions import ScriptFunction
+from cq_measure.structure.functions import JavaScriptFunction
 
 _CLASS = re.compile(r"\b(abstract\s+)?class\s+([A-Za-z_$][\w$]*)([^{;]*)\{")
 _INTERFACE = re.compile(r"\binterface\s+([A-Za-z_$][\w$]*)([^{;]*)\{")
@@ -18,7 +18,7 @@ _ABSTRACT_METHOD = re.compile(r"\babstract\s+(?:async\s+)?(?:get\s+|set\s+)?([A-
 _GENERICS = re.compile(r"<[^<>]*>")
 
 
-def script_classes(scan: Scan, functions: list[ScriptFunction], pairs: dict[int, int]) -> list[ClassInfo]:
+def javascript_classes(scan: Scan, functions: list[JavaScriptFunction], pairs: dict[int, int]) -> list[ClassInfo]:
     """Return the classes and interfaces declared in the file."""
     found = []
     for match in _CLASS.finditer(scan.code):
@@ -28,7 +28,7 @@ def script_classes(scan: Scan, functions: list[ScriptFunction], pairs: dict[int,
     return found
 
 
-def _class(scan: Scan, match: re.Match, functions: list[ScriptFunction], pairs: dict[int, int]) -> ClassInfo:
+def _class(scan: Scan, match: re.Match, functions: list[JavaScriptFunction], pairs: dict[int, int]) -> ClassInfo:
     brace = match.end() - 1
     end = pairs.get(brace, brace)
     header = match.group(3)
@@ -46,7 +46,7 @@ def _class(scan: Scan, match: re.Match, functions: list[ScriptFunction], pairs: 
     )
 
 
-def _top_level_names(functions: list[ScriptFunction], start: int, end: int) -> list[str]:
+def _top_level_names(functions: list[JavaScriptFunction], start: int, end: int) -> list[str]:
     names = []
     reach = start
     for function in functions:

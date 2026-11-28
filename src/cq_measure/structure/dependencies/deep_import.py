@@ -6,7 +6,7 @@ import ast
 import posixpath
 import re
 
-from cq_measure.codebase import SCRIPT_LANGUAGES, is_testish, is_within, parts_of
+from cq_measure.codebase import JAVASCRIPT_LANGUAGES, is_testish, is_within, parts_of
 
 _RE_EXPORT = re.compile(r"\bexport\s*(?:type\s*)?(?:\*|\{[^}]*\})\s*(?:as\s+[\w$]+\s*)?from\b")
 
@@ -22,7 +22,7 @@ def barrels(workspace) -> dict[str, str]:
     """
     found = {}
     for source in workspace.sources:
-        if source.name in INDEX_NAMES and source.language in SCRIPT_LANGUAGES:
+        if source.name in INDEX_NAMES and source.language in JAVASCRIPT_LANGUAGES:
             if _RE_EXPORT.search(workspace.scan(source).code):
                 found.setdefault(source.directory, source.path)
         elif source.name == "__init__.py" and declares_api(workspace.python_tree(source)):
