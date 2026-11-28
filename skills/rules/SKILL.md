@@ -20,7 +20,7 @@ Obey these rules each time that you write or change code. Part A (structure) con
 
 Use these questions in this sequence when you add a file:
 
-1. Which feature does the code belong to? Put it in the directory of that feature (rule 2.5). If no feature directory fits, make one with a feature name. Never use a junk-drawer name such as `utils`, `helpers`, `common`, or `misc`. These names are not categories (rule 2.4).
+1. Which domain function does the code serve? Put it in the directory of that function, and narrow the path to the part of the function (`accounting/disputes/`). If no directory fits, make one with the business name of the function (rule 2.5). Put a role directory such as `services/` or `routes/` only at the end of a domain path. Never use a junk-drawer name such as `utils`, `helpers`, `common`, or `misc`. These names are not categories (rule 2.4).
 2. Does a file for this concept exist? Add to it while it stays under the size limit (rule 1.1) and holds one concept (rule 1.2).
 3. If you make a new file, name it for its concept in the case convention of the language (rules 1.3 and 1.5). Add the role suffix that the repository uses for its role (rule 1.4).
 4. Put its unit test next to it, named for it (rules 6.1 and 6.2).
@@ -36,7 +36,7 @@ Use these questions in this sequence when you add a file:
 - **1.1** Keep each source file short. *`file-lines` warn > 300, fail > 500*
 - **1.2** Put one concept in each file. *`one-concept` warn*
 - **1.3** Name the file for its primary concept. *`name-matches-export` warn*
-- **1.4** Name files by category with one role suffix per role. *`role-suffix` warn*
+- **1.4** Spell each role suffix one way in the whole repository. *`role-suffix` warn*
 - **1.5** Use one case convention for file names in each language. *`file-name-case` warn*
 
 ### 2. Directories ([full text](../../guidelines/structure/02-directories.md))
@@ -45,10 +45,10 @@ Use these questions in this sequence when you add a file:
 - **2.2** Keep each directory small. *`dir-files` warn > 12, fail > 20; `dir-subdirs` warn > 12, fail > 20*
 - **2.3** Keep the directory tree shallow. *`dir-depth` warn > 5, fail > 7*
 - **2.4** Never give a directory or a file a junk-drawer name. *`vague-name` fail*
-- **2.5** Group code by feature, then by role. *`package-by-layer` warn*
+- **2.5** Start each path with a domain function, then narrow it. *`package-by-layer` fail*
 - **2.6** Do not nest a directory only to hold one directory. *`single-child-dir` warn*
 - **2.7** Give scripts and generated code their own directory. *`generated-placement` warn; `script-placement` warn*
-- **2.8** Use one case convention for directory names. *`dir-name-case` warn*
+- **2.8** Use the case convention of the language for directory names. *`dir-name-case` warn*
 
 ### 3. Packages and the dependencies between them ([full text](../../guidelines/structure/03-packages.md))
 
@@ -58,7 +58,7 @@ Use these questions in this sequence when you add a file:
 - **3.4** Keep dependencies pointing inward. *`layer-direction` fail*
 - **3.5** Do not make import cycles. *`import-cycle` fail; `file-cycle` warn*
 - **3.6** Limit the number of internal imports in one file. *`fan-out` warn > 12, fail > 20*
-- **3.7** Name a package for the feature or concept that it holds. *judged*
+- **3.7** Name a package for the domain function that it holds. *judged*
 
 ### 4. Functions and classes ([full text](../../guidelines/structure/04-functions-and-classes.md))
 

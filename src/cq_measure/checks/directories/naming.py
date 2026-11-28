@@ -9,7 +9,7 @@ from cq_measure.source.language import language_of
 from cq_measure.source.packages import parts_of
 from cq_measure.source.roles import ROUTE_DIRS, is_test_file
 
-# Junk-drawer names. None of them names a feature or a category. A repository
+# Junk-drawer names. None of them names a domain function. A repository
 # can add names with `vague_names` in .code-quality.json, but it cannot remove these.
 VAGUE_NAMES = frozenset(
     "utils util helpers helper misc common stuff general other temp tmp new old".split()
@@ -26,8 +26,17 @@ _COPY_SUFFIX = re.compile(r"[-_. ](old|new|copy)$", re.I)
 _DIGIT_SUFFIX = re.compile(r"(?:^|[-_.])([A-Za-z]+)(\d+)$")
 SNAKE_DIR = re.compile(r"^_?[a-z0-9]+(?:_[a-z0-9]+)*$")
 KEBAB_DIR = re.compile(r"^_?[a-z0-9]+(?:-[a-z0-9]+)*$")
-SNAKE_ONLY = frozenset({"python", "rust"})
-SNAKE_ALLOWED = frozenset({"python", "rust", "ruby", "go"})
+PASCAL_DOTTED_DIR = re.compile(r"^[A-Z][A-Za-z0-9]*(?:\.[A-Z][A-Za-z0-9]*)*$")
+ONE_WORD_DIR = re.compile(r"^[a-z][a-z0-9]*$")
+# Directory case per language family, in order of precedence. A directory with
+# files of more than one language uses the first rule that applies.
+DIRECTORY_CASES = (
+    ({"csharp"}, "PascalCase, with dots between namespace parts (`Ordering.Domain`)", (PASCAL_DOTTED_DIR,)),
+    ({"java", "kotlin", "go"}, "one lowercase word, with no separators (Java and Go package names)", (ONE_WORD_DIR,)),
+    ({"python", "rust"}, "snake_case (Python cannot import a name with a hyphen)", (SNAKE_DIR,)),
+    ({"ruby"}, "lowercase snake_case or kebab-case", (SNAKE_DIR, KEBAB_DIR)),
+)
+DEFAULT_CASE = ("lowercase kebab-case", (KEBAB_DIR,))
 
 
 def vague_reason(name: str, vague: set[str]) -> str | None:
@@ -65,7 +74,7 @@ def _flag_vague(emit, paths: tuple[str, str], kind: str, vague: set[str]) -> Non
         name = name.split(".")[0]
     reason = vague_reason(name, vague)
     if reason and not (name.lower() in ROUTE_WORDS and _in_route_tree(route_probe)):
-        emit.flag((path, None), f"{kind} {reason}. Name it for the feature or category it holds.")
+        emit.flag((path, None), f"{kind} {reason}. Name it for the domain function that it holds.")
 
 
 def _skip_case(path: str, name: str) -> bool:
@@ -85,12 +94,14 @@ def check_dir_name_case(workspace, emit) -> None:
         name = directory.name
         if _skip_case(path, name):
             continue
-        languages = _languages(directory)
-        if languages & SNAKE_ONLY:
-            expected, ok = "snake_case (Python cannot import a name with a hyphen)", SNAKE_DIR.match(name)
-        elif languages & SNAKE_ALLOWED:
-            expected, ok = "lowercase snake_case or kebab-case", SNAKE_DIR.match(name) or KEBAB_DIR.match(name)
-        else:
-            expected, ok = "lowercase kebab-case", KEBAB_DIR.match(name)
-        if not ok:
+        expected, patterns = expected_case(_languages(directory))
+        if not any(pattern.match(name) for pattern in patterns):
             emit.flag((path, None), f"Directory `{name}` is not {expected}. Rename it.")
+
+
+def expected_case(languages: set[str]) -> tuple[str, tuple]:
+    """Return the description and the patterns of the directory case for the languages of its files."""
+    for family, expected, patterns in DIRECTORY_CASES:
+        if languages & family:
+            return expected, patterns
+    return DEFAULT_CASE

@@ -9,7 +9,7 @@ These rules control where code goes and how large it gets. Most of them have a m
 | Section | Rules |
 |---|---|
 | [1. Files](structure/01-files.md) | Size, one concept per file, names that match the concept, role suffixes, case conventions |
-| [2. Directories](structure/02-directories.md) | A clean root, small directories, a shallow tree, no junk drawers, grouping by feature |
+| [2. Directories](structure/02-directories.md) | A clean root, small directories, a shallow tree, no junk drawers, paths that start with a domain function |
 | [3. Packages](structure/03-packages.md) | Entry points, no deep imports, dependency direction, no cycles, limited fan-out |
 | [4. Functions and classes](structure/04-functions-and-classes.md) | Length, nesting, complexity, parameters, class size |
 | [5. Interfaces and abstraction](structure/05-interfaces-and-abstraction.md) | When an interface or an abstraction pays for itself |

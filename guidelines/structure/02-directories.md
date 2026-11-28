@@ -1,6 +1,6 @@
 # 2. Directories
 
-The directory tree is the first map of a codebase that a reader sees. A good tree is grouped by feature, named by category, shallow, and has no junk drawers. A reader can guess where a file is before they search for it.
+The directory tree is the first map of a codebase that a reader sees. In a good tree, each path starts with a domain function and narrows from there. The tree is shallow and has no junk drawers. A reader can guess where a file is before they search for it.
 
 ### 2.1 Keep the repository root clean
 
@@ -20,7 +20,7 @@ The root holds only what tools expect to find there: manifests, lockfiles, tool 
 
 **Measure:** `dir-depth` — warn above 5, fail above 7.
 
-The check counts directory levels below the nearest package root (the nearest directory with a manifest, or the repository root). A deep tree hides files and makes import paths long. Two levels of grouping (feature, then role) are almost always enough.
+The check counts directory levels below the nearest package root (the nearest directory with a manifest, or the repository root). A deep tree hides files and makes import paths long. A domain function, one or two subdomains, and then a role are almost always enough: `accounting/disputes/routes/`.
 
 ### 2.4 Never give a directory or a file a junk-drawer name
 
@@ -34,34 +34,48 @@ Each of these names is a finding. None of them is a correct name for a directory
 
 A name that ends in `-old`, `-new`, `-copy`, or a number (`parser2`) is also a finding.
 
-Name a directory for the feature that it holds (`billing`, `search`), or for a real category of code (`parsers`, `migrations`, `http`). A real category tells the reader what each file in it is.
+Name a directory for the domain function that it holds, or for a part of that function: `accounting`, `accounting/disputes`. Rule 2.5 gives the full order of a path.
 
 A `.code-quality.json` file can add names to the list with `vague_names`. It cannot remove a name from the list.
 
 Exception: in the route directory of a web framework (`app/`, `pages/`, `routes/`), a directory name is part of a URL and does not group code. There, `new`, `old`, `other`, and `general` are permitted. Example: `app/projects/new/page.tsx` serves the URL `/projects/new`.
 
 Bad: `src/utils/format.ts`, `src/helpers/retry.py`.
-Good: `src/currency/format.ts`, `src/http/retry.py`.
+Good: `src/billing/invoices/format.ts`, `src/shipping/carriers/retry.py`.
 
-### 2.5 Group code by feature, then by role
+### 2.5 Start each path with a domain function, then narrow it
 
-**Measure:** `package-by-layer` — warn.
+**Measure:** `package-by-layer` — fail.
 
-Put the code for one feature in one directory. Inside the feature, group by role if the feature is large. A change to one feature then touches one directory.
+A directory path is a sequence from general to specific. It starts with a domain function: the part of the business that the code serves, such as `accounting`, `billing`, or `fleet`. Each level below it narrows the function: `accounting/disputes/`, `accounting/discrepancies/`. A reader who knows the business can find code from its path. A change to one function stays in one subtree.
+
+A role or a layer is not a domain function. Put a role directory (`services`, `controllers`, `routes`, `models`, `components`) only inside a domain directory, at the end of the path. Shared technical code (`logging`, `auth`, `database`, `network`) also goes inside the domain that owns it, or into a domain that the business can name.
 
 Bad (packaged by layer):
 
 ```
-src/controllers/  src/services/  src/repositories/  src/models/
+src/controllers/  src/services/  src/routes/  src/models/  src/logging/
 ```
 
-Good (packaged by feature):
+Good (domain first, role last):
 
 ```
-src/billing/   src/accounts/   src/reporting/
+src/accounting/disputes/routes/
+src/accounting/disputes/services/
+src/accounting/discrepancies/
+src/billing/
 ```
 
-The check finds a source directory where three or more of the subdirectories are role names (`controllers`, `services`, `models`, `repositories`, `handlers`, `views`).
+The guidance of the large ecosystems has this order:
+
+- Microsoft puts the bounded context first and the layers below it: `Ordering.API`, `Ordering.Domain`, `Ordering.Infrastructure` ([DDD-oriented microservice](https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/ddd-oriented-microservice)). Its namespace pattern is `<Company>.<Product>.<Feature>.<Subnamespace>` ([Names of Namespaces](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-namespaces)).
+- Spring Boot puts `customer` and `order` directly below the application package. The role is in the class name: `CustomerController`, `CustomerService` ([Structuring Your Code](https://docs.spring.io/spring-boot/reference/using/structuring-your-code.html)).
+- Eric Evans: "Choose modules that tell the story of the system" ([DDD Reference](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf)).
+- Angular: "Avoid creating subdirectories based on the type of code" ([style guide](https://angular.dev/style-guide)).
+
+A framework default that puts layers first is also a finding. Examples are Rails `app/models` and `app/controllers`, and a .NET solution with `Domain`, `Application`, `Infrastructure`, and `Web` projects. To keep such a default, turn the check off in `.code-quality.json`. Then the decision is visible.
+
+The check finds a role, layer, tier, or technical name at the top of a path. The top is the first name below the package root and the directories that a build tool requires: `src`, `lib`, `app`, `internal`, `src/main/java`, and a chain of single subdirectories such as `com/acme/shop`. The list of names is in [`domain_first.py`](../../src/cq_measure/checks/directories/domain_first.py). A `.code-quality.json` file can add names with `role_dirs`. It cannot remove names. The route directories of a web framework (`app/api/route.ts`) are URL segments, so they are not findings. Rules 2.7 and 6.3 control the directories for scripts, generated code, and tests.
 
 ### 2.6 Do not nest a directory only to hold one directory
 
@@ -77,8 +91,18 @@ Generated code goes into a directory named `generated`, `gen`, or `__generated__
 
 Shell scripts go into `scripts/`, `bin/`, or `tools/`. `script-placement` finds a shell script in a source directory.
 
-### 2.8 Use one case convention for directory names
+### 2.8 Use the case convention of the language for directory names
 
 **Measure:** `dir-name-case` — warn.
 
-Directory names are lowercase. A directory that holds Python modules uses `snake_case`, because Python cannot import a name with a hyphen. Other directories use `kebab-case`. Tool directories (`__tests__`, `__fixtures__`, `__mocks__`, `__generated__`), dot directories, and framework route directories (`[id]`, `(group)`, `@slot`) are not findings.
+The case of a directory name follows the language of the files in it, because the directory name is often part of a namespace or an import path:
+
+| Files in the directory | Case | Example |
+|---|---|---|
+| C# | PascalCase, with dots between namespace parts. The directory matches the namespace (.NET rule IDE0130). | `Ordering.Domain` |
+| Java, Kotlin, Go | One lowercase word, with no separators. Java package names and Go package names have no separators. | `customer`, `userstore` |
+| Python, Rust | `snake_case`. Python cannot import a name with a hyphen. | `order_lines` |
+| Ruby | `snake_case` or `kebab-case` | `order_lines` |
+| Other languages, or no files | `kebab-case` | `order-lines` |
+
+Sources: [IDE0130](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0130), [Naming a Package](https://docs.oracle.com/javase/tutorial/java/package/namingpkgs.html), [Go package names](https://go.dev/blog/package-names). Tool directories (`__tests__`, `__fixtures__`, `__mocks__`, `__generated__`), dot directories, and framework route directories (`[id]`, `(group)`, `@slot`) are not findings.

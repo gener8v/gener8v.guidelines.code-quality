@@ -3,13 +3,6 @@ import unittest
 from cq_measure.fixture_repository import findings_for
 
 
-class PackageByLayerTest(unittest.TestCase):
-    def test_layers(self):
-        files = {"src/controllers/a.ts": "", "src/services/a.ts": "", "src/models/a.ts": ""}
-        self.assertEqual([f.path for f in findings_for(files, "package-by-layer")], ["src"])
-        self.assertEqual(findings_for({"src/billing/a.ts": "", "src/services/a.ts": ""}, "package-by-layer"), [])
-
-
 class SingleChildDirTest(unittest.TestCase):
     def test_lone_child(self):
         self.assertEqual([f.path for f in findings_for({"docs/adr/a.md": ""}, "single-child-dir")], ["docs"])

@@ -18,12 +18,7 @@
     "dir-subdirs": {"rule": "2.2", "warn": 12, "fail": 20},
     "dir-depth": {"rule": "2.3", "warn": 5, "fail": 7},
     "vague-name": {"rule": "2.4", "severity": "fail"},
-    "package-by-layer": {
-      "rule": "2.5",
-      "severity": "warn",
-      "role_dirs": ["controllers", "services", "models", "repositories", "handlers", "views"],
-      "min_role_dirs": 3
-    },
+    "package-by-layer": {"rule": "2.5", "severity": "fail", "role_dirs": []},
     "single-child-dir": {"rule": "2.6", "severity": "warn"},
     "generated-placement": {"rule": "2.7", "severity": "warn", "dirs": ["generated", "gen", "__generated__"]},
     "script-placement": {"rule": "2.7", "severity": "warn", "dirs": ["scripts", "script", "bin", "tools"]},
@@ -88,8 +83,8 @@
     "hook": []
   },
   "layers": {
-    "inner": ["domain", "core", "model", "models", "entities"],
-    "outer": ["infrastructure", "infra", "adapters", "db", "persistence", "api", "http", "web", "ui", "cli"]
+    "inner": ["domain", "model", "models", "entities"],
+    "outer": ["infrastructure", "adapters", "db", "persistence", "api", "http", "web", "ui", "cli"]
   },
   "cross_cutting_test_dirs": ["e2e", "integration", "acceptance", "contract", "smoke", "load", "perf", "performance"],
   "entry_points": [

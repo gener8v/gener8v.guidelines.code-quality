@@ -27,7 +27,7 @@ The text after each rule shows how it is measured. A check ID with `warn` and `f
 - **1.1** Keep each source file short. *`file-lines` warn > 300, fail > 500*
 - **1.2** Put one concept in each file. *`one-concept` warn*
 - **1.3** Name the file for its primary concept. *`name-matches-export` warn*
-- **1.4** Name files by category with one role suffix per role. *`role-suffix` warn*
+- **1.4** Spell each role suffix one way in the whole repository. *`role-suffix` warn*
 - **1.5** Use one case convention for file names in each language. *`file-name-case` warn*
 
 ### 2. Directories ([full text](https://github.com/gener8v/gener8v.guidelines.code-quality/blob/main/guidelines/structure/02-directories.md))
@@ -36,10 +36,10 @@ The text after each rule shows how it is measured. A check ID with `warn` and `f
 - **2.2** Keep each directory small. *`dir-files` warn > 12, fail > 20; `dir-subdirs` warn > 12, fail > 20*
 - **2.3** Keep the directory tree shallow. *`dir-depth` warn > 5, fail > 7*
 - **2.4** Never give a directory or a file a junk-drawer name. *`vague-name` fail*
-- **2.5** Group code by feature, then by role. *`package-by-layer` warn*
+- **2.5** Start each path with a domain function, then narrow it. *`package-by-layer` fail*
 - **2.6** Do not nest a directory only to hold one directory. *`single-child-dir` warn*
 - **2.7** Give scripts and generated code their own directory. *`generated-placement` warn; `script-placement` warn*
-- **2.8** Use one case convention for directory names. *`dir-name-case` warn*
+- **2.8** Use the case convention of the language for directory names. *`dir-name-case` warn*
 
 ### 3. Packages and the dependencies between them ([full text](https://github.com/gener8v/gener8v.guidelines.code-quality/blob/main/guidelines/structure/03-packages.md))
 
@@ -49,7 +49,7 @@ The text after each rule shows how it is measured. A check ID with `warn` and `f
 - **3.4** Keep dependencies pointing inward. *`layer-direction` fail*
 - **3.5** Do not make import cycles. *`import-cycle` fail; `file-cycle` warn*
 - **3.6** Limit the number of internal imports in one file. *`fan-out` warn > 12, fail > 20*
-- **3.7** Name a package for the feature or concept that it holds. *judged*
+- **3.7** Name a package for the domain function that it holds. *judged*
 
 ### 4. Functions and classes ([full text](https://github.com/gener8v/gener8v.guidelines.code-quality/blob/main/guidelines/structure/04-functions-and-classes.md))
 

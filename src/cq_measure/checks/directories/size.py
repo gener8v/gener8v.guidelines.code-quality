@@ -25,14 +25,14 @@ def _counted_file(directory_path: str, name: str) -> bool:
 def check_dir_files(workspace, emit) -> None:
     for path, directory in _measured_directories(workspace):
         count = sum(1 for name in directory.files if _counted_file(path, name))
-        text = (f"{count} source files in `{path or '.'}`", "Split it into subdirectories that each name one category.")
+        text = (f"{count} source files in `{path or '.'}`", "Split it into subdirectories that each name one part of its domain function.")
         emit.measure((path or ".", None), count, text)
 
 
 def check_dir_subdirs(workspace, emit) -> None:
     for path, directory in _measured_directories(workspace):
         count = sum(1 for name in directory.subdirs if not name.startswith(".") and name != "__pycache__")
-        text = (f"{count} subdirectories in `{path or '.'}`", "Group them under fewer category directories.")
+        text = (f"{count} subdirectories in `{path or '.'}`", "Group them under fewer domain directories.")
         emit.measure((path or ".", None), count, text)
 
 
@@ -51,5 +51,5 @@ def check_dir_depth(workspace, emit) -> None:
         if not any(language_of(name) for name in directory.files):
             continue
         depth = depth_of(path, workspace.package_roots)
-        text = (f"`{path}` is {depth} levels below its package root", "Flatten the tree: a feature, then a role, is enough.")
+        text = (f"`{path}` is {depth} levels below its package root", "Flatten the tree: a domain function, one or two subdomains, then a role, are enough.")
         emit.measure((path, None), depth, text)

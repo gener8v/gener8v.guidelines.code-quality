@@ -1,4 +1,4 @@
-"""Rules 2.5, 2.6, and 2.7: package by feature, no lone subdirectories, scripts and generated code apart."""
+"""Rules 2.6 and 2.7: no lone subdirectories, and scripts and generated code apart."""
 
 from __future__ import annotations
 
@@ -9,18 +9,6 @@ from cq_measure.source.roles import ROUTE_DIRS, generated_marker_line, in_test_t
 
 SOURCE_DIR_NAMES = frozenset({"src", "lib", "app", "pkg", "internal"})
 LONE_CHILD_EXEMPT = frozenset({"src", "cmd"})
-
-
-def check_package_by_layer(workspace, emit) -> None:
-    role_dirs = set(emit.option("role_dirs", []))
-    minimum = emit.option("min_role_dirs", 3)
-    for path, directory in sorted(workspace.directories.items()):
-        if has_hidden_part(path) or in_test_tree(path + "/x"):
-            continue
-        layers = sorted(directory.subdirs & role_dirs)
-        if len(layers) >= minimum:
-            names = ", ".join(f"`{name}`" for name in layers)
-            emit.flag((path or ".", None), f"Subdirectories {names} are layers. Group the code by feature, then by role inside each feature.")
 
 
 def _lone_child_exempt(workspace, path: str) -> bool:

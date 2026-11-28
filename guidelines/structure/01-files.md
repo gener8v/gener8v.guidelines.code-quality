@@ -23,11 +23,13 @@ Good: `invoice.py`, `customer.py`, `payment.py`, `refund.py` in a `billing/` dir
 
 When a file holds one class or one component, the file name matches it. The check ignores case and separators, so `invoice_service.py` matches `InvoiceService`, and `invoice-list.tsx` matches `InvoiceList`. A reader who knows the class name can find the file without a search.
 
-### 1.4 Name files by category with one role suffix per role
+### 1.4 Spell each role suffix one way in the whole repository
 
 **Measure:** `role-suffix` — warn.
 
 When a file has a role (repository, service, controller, handler, schema, store, hook), put the role at the end of the name. Use one spelling and one separator for each role in the whole repository.
+
+The suffix names the role of a file inside its domain directory, for example `accounting/disputes/dispute.service.ts`. A role suffix never replaces the domain directory (rule 2.5). Use a role suffix only in an ecosystem that uses one. Go, for example, names a file for its content, not for its role.
 
 Bad: `user.service.ts`, `orderService.ts`, `payment-svc.ts`.
 Good: `user.service.ts`, `order.service.ts`, `payment.service.ts`.

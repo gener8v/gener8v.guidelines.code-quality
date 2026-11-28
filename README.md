@@ -14,7 +14,7 @@ Coding agents write code faster than people can review it. This repository gives
 | Section | Examples of measures (warn / fail) |
 |---|---|
 | 1. Files | File length (300 / 500 lines), one concept per file, the file name matches the class, one role suffix per role, one case convention per language |
-| 2. Directories | Root files (15 / 25), source files per directory (12 / 20), depth (5 / 7), no `utils` or `helpers`, grouping by feature |
+| 2. Directories | Root files (15 / 25), source files per directory (12 / 20), depth (5 / 7), no `utils` or `helpers`, paths that start with a domain function |
 | 3. Packages | No deep imports, relative climbs (2 / 3), dependencies point inward, no import cycles, fan-out (12 / 20) |
 | 4. Functions and classes | Function length (40 / 80), nesting (3 / 4), complexity (10 / 15), parameters (4 / 6), methods per class (15 / 25) |
 | 5. Interfaces and abstraction | Interfaces with one implementation, interface size (7 / 12), pass-through layers, inheritance depth (2 / 3) |

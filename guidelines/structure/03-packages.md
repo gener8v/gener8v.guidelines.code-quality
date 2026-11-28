@@ -27,16 +27,18 @@ Good: `import { roundCents } from "../billing";`
 
 **Measure:** `layer-direction` — fail.
 
-Domain code holds the business rules. It does not import the database, the HTTP framework, the UI, or a vendor SDK. Infrastructure imports the domain, never the reverse. Then you can test the rules without infrastructure, and replace infrastructure without a change to the rules.
+Inside a domain function, the domain layer holds the business rules. It does not import the database, the HTTP framework, the UI, or a vendor SDK. The infrastructure layer imports the domain layer, never the reverse. Then you can test the rules without infrastructure, and replace infrastructure without a change to the rules.
 
 The default layers are:
 
 | Layer | Directory names |
 |---|---|
-| Inner | `domain`, `core`, `model`, `models`, `entities` |
-| Outer | `infrastructure`, `infra`, `adapters`, `db`, `persistence`, `api`, `http`, `web`, `ui`, `cli` |
+| Inner | `domain`, `model`, `models`, `entities` |
+| Outer | `infrastructure`, `adapters`, `db`, `persistence`, `api`, `http`, `web`, `ui`, `cli` |
 
 A file below an inner directory must not import a file below an outer directory. A repository can set its own layers in `.code-quality.json`.
+
+Put the layer directories inside a domain directory, for example `accounting/disputes/domain/` and `accounting/disputes/infrastructure/` (rule 2.5).
 
 ### 3.5 Do not make import cycles
 
@@ -52,7 +54,7 @@ A file below an inner directory must not import a file below an outer directory.
 
 The check counts the distinct files in the repository that one file imports. A file that imports many others knows too much and changes whenever any of them change. It usually does more than one job (rule 4.7).
 
-### 3.7 Name a package for the feature or concept that it holds
+### 3.7 Name a package for the domain function that it holds
 
 **Measure:** judged (self-check).
 
