@@ -5,7 +5,7 @@ The rule files in guidelines/ are the source of truth. This script:
 
 - reads every section and rule, with its Measure line;
 - makes sure that rule numbers, check IDs, severities, and thresholds agree
-  with src/cq_measure/defaults.json;
+  with src/cq_measure/configuration/defaults.json;
 - writes AGENTS.md and the index block in skills/rules/SKILL.md.
 
 Run it with --check in CI. Then it changes nothing, and it exits 1 when a
@@ -24,7 +24,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 GUIDELINES = REPO_ROOT / "guidelines"
 PARTS = (("structure", "Part A: Structure"), ("behavior", "Part B: Behavior"))
-DEFAULTS = REPO_ROOT / "src" / "cq_measure" / "defaults.json"
+DEFAULTS = REPO_ROOT / "src" / "cq_measure" / "configuration" / "defaults.json"
 AGENTS_MD = REPO_ROOT / "AGENTS.md"
 SKILL_MD = REPO_ROOT / "skills" / "rules" / "SKILL.md"
 BLOB_URL = "https://github.com/gener8v/gener8v.guidelines.code-quality/blob/main/"

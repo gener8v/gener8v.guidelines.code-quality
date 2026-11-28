@@ -65,7 +65,7 @@ If Node.js or the `typescript` package is not available, `cq-measure` approximat
 
 ## Change the limits for a repository
 
-Put a `.code-quality.json` file at the root of the repository that you measure. It merges over the defaults in [`src/cq_measure/defaults.json`](src/cq_measure/defaults.json):
+Put a `.code-quality.json` file at the root of the repository that you measure. It merges over the defaults in [`src/cq_measure/configuration/defaults.json`](src/cq_measure/configuration/defaults.json):
 
 ```json
 {
@@ -82,7 +82,7 @@ To accept one finding, add a comment with a reason: `cq-ignore file-lines: gener
 
 ## Linter configuration
 
-[`configs/eslint.config.mjs`](configs/eslint.config.mjs) and [`configs/ruff.toml`](configs/ruff.toml) set the limits of section 4 in ESLint and Ruff, for feedback in the editor.
+[`linters/eslint.config.mjs`](linters/eslint.config.mjs) and [`linters/ruff.toml`](linters/ruff.toml) set the limits of section 4 in ESLint and Ruff, for feedback in the editor.
 
 ## Repository layout
 
@@ -91,9 +91,11 @@ guidelines/structure/   Part A, sections 1 to 7 (source of truth)
 guidelines/behavior/    Part B, sections 8 to 18 (source of truth)
 src/cq_measure/         the measuring tool, with each test next to its module
 skills/                 the Claude Code skills: rules, self-check
-configs/                ESLint and Ruff configuration for section 4
+linters/                ESLint and Ruff configuration for section 4
 scripts/build_index.py  writes AGENTS.md and the skill index from guidelines/
 ```
+
+The measuring tool has one directory for each area of the rules: `files/`, `directories/`, `dependencies/`, `functions/`, `classes/`, `interfaces/`, `test_placement/`, `duplication/`, and `behavior/`. Each holds one module for each check, named for the check. `codebase/` reads the measured repository: its files, languages, and syntax. `configuration/` and `reporting/` hold the settings and the report. `testing/` holds the test fixtures.
 
 `scripts/build_index.py --check` runs in CI. It fails when a rule, its check, and its limits in `defaults.json` do not agree, or when `AGENTS.md` is out of date. The repository is measured by its own tool in CI.
 

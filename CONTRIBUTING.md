@@ -3,7 +3,7 @@
 ## Change a rule
 
 1. Edit the rule in `guidelines/`. Do not edit `AGENTS.md` or the index in `skills/rules/SKILL.md`, because the generator writes them.
-2. If the rule has a measure, change `src/cq_measure/defaults.json` to match, and change the check in `src/cq_measure/`.
+2. If the rule has a measure, change `src/cq_measure/configuration/defaults.json` to match, and change the check in the directory of its section, for example `src/cq_measure/directories/`.
 3. Run the generator: `python3 scripts/build_index.py`.
 4. Run all checks (the same checks as CI):
 
@@ -11,7 +11,7 @@
 python3 scripts/build_index.py --check
 python3 -m unittest discover -s scripts -p "*_test.py"
 PYTHONPATH=src python3 -m unittest discover -s src -p "*_test.py" -t src
-node --test src/cq_measure/metrics/measure-typescript.test.cjs
+node --test src/cq_measure/codebase/measure-typescript.test.cjs
 PYTHONPATH=src python3 -m cq_measure .
 ```
 

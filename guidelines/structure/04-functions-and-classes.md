@@ -2,7 +2,7 @@
 
 A function is the smallest unit that a reader must understand in one piece. These limits keep each function small enough to read on one screen and to test with a few cases.
 
-`cq-measure` measures these rules from the syntax tree. For Python, it uses the Python parser. For TypeScript and JavaScript, it uses the TypeScript compiler of the measured repository. If the repository does not have the `typescript` package, the measure for TypeScript and JavaScript is approximate, and the report says so. [`configs/eslint.config.mjs`](../../configs/eslint.config.mjs) and [`configs/ruff.toml`](../../configs/ruff.toml) set the same limits in ESLint and Ruff.
+`cq-measure` measures these rules from the syntax tree. For Python, it uses the Python parser. For TypeScript and JavaScript, it uses the TypeScript compiler of the measured repository. If the repository does not have the `typescript` package, the measure for TypeScript and JavaScript is approximate, and the report says so. [`linters/eslint.config.mjs`](../../linters/eslint.config.mjs) and [`linters/ruff.toml`](../../linters/ruff.toml) set the same limits in ESLint and Ruff.
 
 ### 4.1 Keep functions short
 

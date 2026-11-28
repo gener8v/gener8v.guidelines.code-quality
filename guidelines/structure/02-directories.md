@@ -75,7 +75,7 @@ The guidance of the large ecosystems has this order:
 
 A framework default that puts layers first is also a finding. Examples are Rails `app/models` and `app/controllers`, and a .NET solution with `Domain`, `Application`, `Infrastructure`, and `Web` projects. To keep such a default, turn the check off in `.code-quality.json`. Then the decision is visible.
 
-The check finds a role, layer, tier, or technical name at the top of a path. The top is the first name below the package root and the directories that a build tool requires: `src`, `lib`, `app`, `internal`, `src/main/java`, and a chain of single subdirectories such as `com/acme/shop`. The list of names is in [`domain_first.py`](../../src/cq_measure/checks/directories/domain_first.py). A `.code-quality.json` file can add names with `role_dirs`. It cannot remove names. The route directories of a web framework (`app/api/route.ts`) are URL segments, so they are not findings. Rules 2.7 and 6.3 control the directories for scripts, generated code, and tests.
+The check finds a role, layer, tier, or technical name at the top of a path. The top is the first name below the package root and the directories that a build tool requires: `src`, `lib`, `app`, `internal`, `src/main/java`, and a chain of single subdirectories such as `com/acme/shop`. The list of names is in [`package_by_layer.py`](../../src/cq_measure/directories/package_by_layer.py). A `.code-quality.json` file can add names with `role_dirs`. It cannot remove names. The route directories of a web framework (`app/api/route.ts`) are URL segments, so they are not findings. Rules 2.7 and 6.3 control the directories for scripts, generated code, and tests.
 
 ### 2.6 Do not nest a directory only to hold one directory
 

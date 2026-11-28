@@ -1,8 +1,9 @@
 import unittest
 
-from cq_measure.config import load_defaults
-from cq_measure.fixture_repository import fixture_repo
-from cq_measure.workspace import all_classes, load_workspace
+from cq_measure.configuration import load_defaults
+from cq_measure.structure.classes import all_classes
+from cq_measure.testing import fixture_repo
+from cq_measure.workspace import load_workspace
 
 FILES = {
     "pkg/a.py": "class A:\n    def f(self):\n        return 1\n",

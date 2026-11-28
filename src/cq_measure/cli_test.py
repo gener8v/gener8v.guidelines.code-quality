@@ -4,8 +4,8 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 
 from cq_measure.cli import list_checks, main
-from cq_measure.config import load_defaults
-from cq_measure.fixture_repository import fixture_repo
+from cq_measure.configuration import load_defaults
+from cq_measure.testing import fixture_repo
 
 LONG = "x = 1\n" * 501
 

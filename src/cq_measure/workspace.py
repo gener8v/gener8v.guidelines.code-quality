@@ -9,18 +9,21 @@ from collections import Counter
 from functools import cached_property
 from pathlib import Path
 
-from cq_measure.imports.graph import ModuleGraph, build_graph
-from cq_measure.imports.script_exports import script_exports
-from cq_measure.metrics.file_metrics import classes_of, functions_of
-from cq_measure.metrics.typescript_compiler import CompilerResult, measure_with_compiler
-from cq_measure.source.comments import comments_of
-from cq_measure.source.directory import build_directories
-from cq_measure.source.discovery import discover
-from cq_measure.source.language import SCRIPT_LANGUAGES
-from cq_measure.source.lexer import scan_source
-from cq_measure.source.packages import package_roots
-from cq_measure.source.roles import is_generated
-from cq_measure.source.source_file import SourceFile
+from cq_measure.codebase import (
+    SCRIPT_LANGUAGES,
+    CompilerResult,
+    SourceFile,
+    build_directories,
+    comments_of,
+    discover,
+    is_generated,
+    measure_with_compiler,
+    package_roots,
+    scan_source,
+)
+from cq_measure.structure.classes import classes_of
+from cq_measure.structure.dependencies import ModuleGraph, build_graph, script_exports
+from cq_measure.structure.functions import functions_of
 
 _IDENTIFIER = re.compile(r"[A-Za-z_$][\w$]*")
 
@@ -105,11 +108,6 @@ class Workspace:
 def load_workspace(root: Path, config: dict) -> Workspace:
     """Discover the files under `root` and wrap them in a workspace."""
     return Workspace(root, config, discover(root, config["ignore"]))
-
-
-def all_classes(workspace: Workspace) -> list:
-    """Return (file, class info) for every class and interface in the repository."""
-    return workspace.repository_fact("classes", lambda: [(s, info) for s in workspace.sources for info in workspace.classes(s)])
 
 
 def compiled_for(workspace: Workspace, source: SourceFile) -> CompilerResult | None:

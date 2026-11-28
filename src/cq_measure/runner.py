@@ -6,10 +6,8 @@ import subprocess
 from pathlib import Path
 
 from cq_measure.checks import CHECKS
-from cq_measure.emitter import Emitter
-from cq_measure.findings import Finding, sort_key
-from cq_measure.source.packages import is_within
-from cq_measure.suppression import apply_suppressions
+from cq_measure.codebase import is_within
+from cq_measure.reporting import Emitter, Finding, apply_suppressions, sort_key
 from cq_measure.workspace import Workspace, load_workspace
 
 

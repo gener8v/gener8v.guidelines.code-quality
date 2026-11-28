@@ -7,9 +7,8 @@ import sys
 from pathlib import Path
 
 from cq_measure.checks import CHECKS
-from cq_measure.config import ConfigError, load_config
-from cq_measure.findings import severity_rank
-from cq_measure.output import render_json, render_text, summarize
+from cq_measure.configuration import ConfigError, load_config
+from cq_measure.reporting import render_json, render_text, severity_rank, summarize
 from cq_measure.runner import UsageError, changed_files, keep_paths, run_checks
 from cq_measure.workspace import load_workspace, typescript_status
 

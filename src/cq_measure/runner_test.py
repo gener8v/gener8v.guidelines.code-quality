@@ -1,9 +1,9 @@
 import unittest
 
-from cq_measure.config import load_defaults
-from cq_measure.findings import Finding
-from cq_measure.fixture_repository import fixture_repo
+from cq_measure.configuration import load_defaults
+from cq_measure.reporting import Finding
 from cq_measure.runner import UsageError, changed_files, keep_paths, measure
+from cq_measure.testing import fixture_repo
 
 
 class RunnerTest(unittest.TestCase):

@@ -26,4 +26,4 @@ cq-measure = "cq_measure.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-cq_measure = ["defaults.json", "metrics/measure-typescript.cjs"]
+cq_measure = ["configuration/defaults.json", "codebase/measure-typescript.cjs"]
