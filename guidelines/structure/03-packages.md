@@ -12,10 +12,10 @@ Export the public names of a package from one file: `index.ts` in TypeScript and
 
 **Measure:** `deep-import` — fail.
 
-TypeScript and JavaScript: the check finds an import of a file inside a directory that has an `index` file, from code outside that directory, when the import does not go through the `index` file. Python: the check finds an import of a module or name with a leading underscore from outside its package.
+TypeScript and JavaScript: the check finds an import of a file inside a directory that has an `index` file, from code outside that directory, when the import does not go through the `index` file. Python: the check finds an import of a module or name with a leading underscore from outside its package. It also finds an import of a module inside a package that declares an entry point, from code outside that package, when the import does not go through the `__init__.py` file. An `__init__.py` file declares an entry point when it sets `__all__` or re-exports names with a relative import (`from .invoice import total`).
 
-Bad: `import { roundCents } from "../billing/internal/rounding";`
-Good: `import { roundCents } from "../billing";`
+Bad: `import { roundCents } from "../billing/internal/rounding";`, `from billing.rounding import round_cents`
+Good: `import { roundCents } from "../billing";`, `from billing import round_cents`
 
 ### 3.3 Do not climb more than two levels in a relative import
 

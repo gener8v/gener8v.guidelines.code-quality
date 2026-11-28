@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import posixpath
 import re
 
@@ -14,13 +15,32 @@ INDEX_NAMES = tuple(f"index{ext}" for ext in (".ts", ".tsx", ".js", ".jsx", ".mj
 
 
 def barrels(workspace) -> dict[str, str]:
-    """Return directories whose `index` file re-exports names, mapped to that index file."""
+    """Return the directories that declare an entry point, mapped to the entry file.
+
+    TypeScript and JavaScript: an `index` file that re-exports names. Python: an
+    `__init__.py` that sets `__all__` or re-exports names with a relative import.
+    """
     found = {}
     for source in workspace.sources:
         if source.name in INDEX_NAMES and source.language in SCRIPT_LANGUAGES:
             if _RE_EXPORT.search(workspace.scan(source).code):
                 found.setdefault(source.directory, source.path)
+        elif source.name == "__init__.py" and declares_api(workspace.python_tree(source)):
+            found.setdefault(source.directory, source.path)
     return found
+
+
+def declares_api(tree: ast.Module | None) -> bool:
+    """Return True when a Python `__init__.py` sets `__all__` or re-exports names from its own modules."""
+    if tree is None:
+        return False
+    for node in tree.body:
+        if isinstance(node, ast.ImportFrom) and node.level > 0:
+            return True
+        targets = node.targets if isinstance(node, ast.Assign) else [node.target] if isinstance(node, ast.AnnAssign) else []
+        if any(isinstance(target, ast.Name) and target.id == "__all__" for target in targets):
+            return True
+    return False
 
 
 def bypassed_barrel(importer: str, target: str, entries: dict[str, str]) -> str | None:
@@ -33,6 +53,16 @@ def bypassed_barrel(importer: str, target: str, entries: dict[str, str]) -> str 
         if directory in entries and entries[directory] != target:
             return directory
     return None
+
+
+def names_the_package(record, directory: str) -> bool:
+    """Return True for `from billing import total` when `billing/total.py` also exists.
+
+    The import names the package, so it goes through `__init__.py`. Python
+    resolves the name to the module file only because the two names are equal.
+    """
+    named = record.specifier.lstrip(".").rsplit(".", 1)[-1]
+    return posixpath.dirname(record.target) == directory and named == posixpath.basename(directory)
 
 
 def _private_part(target: str, names: tuple[str, ...]) -> tuple[str, str] | None:
@@ -66,8 +96,9 @@ def _deep_message(path: str, record, entries: dict[str, str]) -> str | None:
         private = _private_part(record.target, record.names)
         if private and not is_within(path, private[1]):
             return f"Imports the private `{private[0]}` from outside `{private[1] or '.'}/`. Use a public name from the package entry point."
-        return None
     directory = bypassed_barrel(path, record.target, entries)
+    if directory and path.endswith(".py") and names_the_package(record, directory):
+        return None
     if directory:
         return f"`{record.specifier}` reaches past the entry point of `{directory}/`. Import from `{entries[directory]}` instead."
     return None
